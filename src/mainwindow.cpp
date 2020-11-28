@@ -15,12 +15,19 @@ MainWindow::MainWindow(QWidget *parent)
     verticalLayout->addLayout(controlArea);
     canvas = new Canvas();
     verticalLayout->addWidget(canvas);
-    rowCount = new QTextEdit("4");
-    colCount = new QTextEdit("5");
+
+    rowCount = new QTextEdit("16");
+    colCount = new QTextEdit("9");
     rowCount->setFixedSize(100,30);
     colCount->setFixedSize(100,30);
+    setRowAndColCount = new QPushButton("Set");
+    setRowAndColCount->setFixedSize(50, 30);
+
     controlArea->addWidget(rowCount);
     controlArea->addWidget(colCount);
+    controlArea->addWidget(setRowAndColCount);
+
+    QObject::connect(setRowAndColCount, &QPushButton::clicked, this, &MainWindow::rowOrColCountChanged);
 
     setLayout(verticalLayout);
 }
@@ -42,4 +49,15 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     windowSize = event->size();
 
     if(DEBUG_MSGS_ON) qDebug() << "MainWindow resize: " << windowSize.width() << '/' << windowSize.height() << Qt::endl;
+}
+
+void MainWindow::rowOrColCountChanged()
+{
+    canvas->colCount = rowCount->toPlainText().toUInt();
+    canvas->rowCount = colCount->toPlainText().toUInt();
+
+    update();
+
+    if(DEBUG_MSGS_ON) qDebug() << "rowCount: " << rowCount->toPlainText()
+                               << " colCount : " << colCount->toPlainText() << Qt::endl;
 }

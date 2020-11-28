@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QTextEdit>
+#include <QPushButton>
 
 #include "canvas.h"
 
@@ -29,7 +30,11 @@ private:
     QVBoxLayout* verticalLayout;
     QHBoxLayout* controlArea;
     QTextEdit* rowCount;
+    QPushButton* setRowAndColCount;
     QTextEdit* colCount;
     Canvas* canvas;
+
+private slots:
+    void rowOrColCountChanged();
 };
 #endif // MAINWINDOW_H
