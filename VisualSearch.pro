@@ -12,10 +12,13 @@ INCLUDEPATH += \
     inc/
 
 SOURCES += \
+    src/canvas.cpp \
     src/main.cpp \
     src/mainwindow.cpp
 
 HEADERS += \
+    inc/canvas.h \
+    inc/debug.h \
     inc/mainwindow.h
 
 # Default rules for deployment.
