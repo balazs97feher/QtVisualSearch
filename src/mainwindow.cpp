@@ -3,38 +3,43 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QPen>
-#include <Qt>
-#include <QDebug>
+#include <QTextEdit>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), windowSize(1600, 900)
+    : QWidget(parent), windowSize(1600, 900)
 {
     resize(windowSize);
+    verticalLayout = new QVBoxLayout();
+    controlArea = new QHBoxLayout();
+    controlArea->setAlignment(Qt::AlignLeft);
+    verticalLayout->addLayout(controlArea);
+    canvas = new Canvas();
+    verticalLayout->addWidget(canvas);
+    rowCount = new QTextEdit("4");
+    colCount = new QTextEdit("5");
+    rowCount->setFixedSize(100,30);
+    colCount->setFixedSize(100,30);
+    controlArea->addWidget(rowCount);
+    controlArea->addWidget(colCount);
+
+    setLayout(verticalLayout);
 }
 
 MainWindow::~MainWindow()
 {
+    delete verticalLayout;
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
     static int id = 0;
-    auto type = event->type();
-    qDebug() << type << id++ << Qt::endl;
-
-    QPainter painter(this);
-    QRect rect1(windowSize.width()/4,windowSize.height()/4,windowSize.width()/2,windowSize.height()/2);
-    QPen pen;
-    pen.setWidth(2);
-    pen.setColor(QColor(100,100,100));
-    painter.setPen(pen);
-    painter.setBrush(QColor(150,200,200));
-    painter.drawRect(rect1);
+    if(DEBUG_MSGS_ON) qDebug() << "MainWindow paint: " << id++ << Qt::endl;
 }
 
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     windowSize = event->size();
-    qDebug() << windowSize.width() << '/' << windowSize.height() << Qt::endl;
+
+    if(DEBUG_MSGS_ON) qDebug() << "MainWindow resize: " << windowSize.width() << '/' << windowSize.height() << Qt::endl;
 }

@@ -1,10 +1,18 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QSize>
+#include "debug.h"
 
-class MainWindow : public QMainWindow
+#include <QWidget>
+#include <QPaintEvent>
+#include <QSize>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QTextEdit>
+
+#include "canvas.h"
+
+class MainWindow : public QWidget
 {
     Q_OBJECT
 
@@ -18,6 +26,10 @@ protected:
 
 private:
     QSize windowSize;
-
+    QVBoxLayout* verticalLayout;
+    QHBoxLayout* controlArea;
+    QTextEdit* rowCount;
+    QTextEdit* colCount;
+    Canvas* canvas;
 };
 #endif // MAINWINDOW_H
