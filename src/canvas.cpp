@@ -2,6 +2,7 @@
 
 #include <QPen>
 #include <QPainter>
+#include <QRectF>
 #include <QPaintEvent>
 
 Canvas::Canvas(QWidget *parent) : QWidget(parent), rowCount(9), colCount(16)
@@ -12,8 +13,8 @@ Canvas::Canvas(QWidget *parent) : QWidget(parent), rowCount(9), colCount(16)
 
 void Canvas::paintEvent(QPaintEvent *event)
 {
-    const uint rectWidth = canvasSize.width()/colCount;
-    const uint rectHeight = canvasSize.height()/rowCount;
+    const float rectWidth = float(canvasSize.width())/colCount;
+    const float rectHeight = float(canvasSize.height())/rowCount;
 
     QPainter painter(this);
     QPen pen;
@@ -25,7 +26,8 @@ void Canvas::paintEvent(QPaintEvent *event)
     for(uint i = 0; i < rowCount; i++)
     {
         for(uint j = 0; j < colCount; j++){
-            painter.drawRect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
+            QRectF rect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
+            painter.drawRect(rect);
         }
     }
 
