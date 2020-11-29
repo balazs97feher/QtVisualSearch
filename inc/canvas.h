@@ -2,6 +2,7 @@
 #define CANVAS_H
 
 #include "debug.h"
+#include "searchgrid.h"
 #include <QWidget>
 #include <QSize>
 #include <QVector>
@@ -24,9 +25,7 @@ protected:
 private:
     QSize canvasSize;
     float rectWidth, rectHeight;
-    uint rowCount;
-    uint colCount;
-    QVector<QVector<int>> fields;
+    SearchGrid searchGrid;
 
 };
 

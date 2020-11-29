@@ -5,22 +5,21 @@
 #include <QRectF>
 #include <QPaintEvent>
 
-Canvas::Canvas(QWidget *parent) : QWidget(parent), rowCount(9), colCount(16)
+Canvas::Canvas(QWidget *parent) : QWidget(parent), searchGrid(9, 16)
 {
-    fields.resize(rowCount);
-    for(auto &row : fields) row.resize(colorCount());
+
 }
 
 void Canvas::setRowAndColCount(uint rowCount, uint colCount)
 {
-    this->rowCount = rowCount;
-    this->colCount = colCount;
-    rectWidth = float(canvasSize.width())/colCount;
-    rectHeight = float(canvasSize.height())/rowCount;
+    searchGrid.rowCount = rowCount;
+    searchGrid.colCount = colCount;
+    rectWidth = float(canvasSize.width())/searchGrid.colCount;
+    rectHeight = float(canvasSize.height())/searchGrid.rowCount;
 
-    fields.clear();
-    fields.resize(rowCount);
-    for(auto &row : fields) row.resize(colorCount());
+    searchGrid.fields.clear();
+    searchGrid.fields.resize(rowCount);
+    for(auto &row : searchGrid.fields) row.resize(colorCount());
 }
 
 
@@ -32,11 +31,11 @@ void Canvas::paintEvent(QPaintEvent *event)
     pen.setColor(QColor(100,100,100));
     painter.setPen(pen);
 
-    for(uint i = 0; i < rowCount; i++)
+    for(uint i = 0; i < searchGrid.rowCount; i++)
     {
-        for(uint j = 0; j < colCount; j++){
+        for(uint j = 0; j < searchGrid.colCount; j++){
             QRectF rect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
-            if(fields[i][j] == 1) painter.setBrush(Qt::red);
+            if(searchGrid.fields[i][j] == 1) painter.setBrush(Qt::red);
             else painter.setBrush(Qt::green);
             painter.drawRect(rect);
         }
@@ -50,8 +49,8 @@ void Canvas::paintEvent(QPaintEvent *event)
 void Canvas::resizeEvent(QResizeEvent *event)
 {
     canvasSize = event->size();
-    rectWidth = float(canvasSize.width())/colCount;
-    rectHeight = float(canvasSize.height())/rowCount;
+    rectWidth = float(canvasSize.width())/searchGrid.colCount;
+    rectHeight = float(canvasSize.height())/searchGrid.rowCount;
 
     if(DEBUG_MSGS_ON) qDebug() << "Canvas resize: " << canvasSize.width() << '/' << canvasSize.height() << Qt::endl;
 }
@@ -61,7 +60,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     int row = event->localPos().y() / rectHeight;
     int col = event->localPos().x() / rectWidth;
-    fields[row][col] = 1;
+    searchGrid.fields[row][col] = 1;
 
     update();
 
