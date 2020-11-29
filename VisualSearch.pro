@@ -12,6 +12,7 @@ INCLUDEPATH += \
     inc/
 
 SOURCES += \
+    src/searchgrid.cpp \
     src/canvas.cpp \
     src/main.cpp \
     src/mainwindow.cpp
@@ -19,7 +20,8 @@ SOURCES += \
 HEADERS += \
     inc/canvas.h \
     inc/debug.h \
-    inc/mainwindow.h
+    inc/mainwindow.h \
+    inc/searchgrid.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
