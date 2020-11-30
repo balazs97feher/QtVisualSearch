@@ -21,6 +21,8 @@ void Canvas::setRowAndColCount(uint rowCount, uint colCount)
 
 void Canvas::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event)
+
     QPainter painter(this);
     QPen pen;
     pen.setWidth(2);
@@ -50,7 +52,7 @@ void Canvas::paintEvent(QPaintEvent *event)
     }
 
     static int id = 0;
-    if(DEBUG_MSGS_ON) qDebug() << "Canvas paint: " << id++ << Qt::endl;
+    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] paint " << id++ << Qt::endl;
 }
 
 
@@ -60,7 +62,7 @@ void Canvas::resizeEvent(QResizeEvent *event)
     rectWidth = float(canvasSize.width())/searchGrid.colCount;
     rectHeight = float(canvasSize.height())/searchGrid.rowCount;
 
-    if(DEBUG_MSGS_ON) qDebug() << "Canvas resize: " << canvasSize.width() << '/' << canvasSize.height() << Qt::endl;
+    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] resize " << canvasSize.width() << '/' << canvasSize.height() << Qt::endl;
 }
 
 
@@ -75,7 +77,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 
     update();
 
-    if(DEBUG_MSGS_ON) qDebug() << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
+    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] mouse release " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
 
 
@@ -96,6 +98,8 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
         searchGrid.clearStart();
         searchGrid.clearDest();
     }
+
+    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] double click " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
 
 Canvas::FieldCoords Canvas::getCoord(const QMouseEvent &event) const

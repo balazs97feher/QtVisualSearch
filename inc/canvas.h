@@ -10,6 +10,10 @@
 class Canvas : public QWidget
 {
     Q_OBJECT
+
+    using FieldType = Field::Type;
+    using FieldCoords = Field::Coordinates;
+
 public:
     explicit Canvas(QWidget *parent = nullptr);
 
@@ -27,9 +31,6 @@ private:
     QSize canvasSize;
     float rectWidth, rectHeight;
     SearchGrid searchGrid;
-
-    using FieldType = Field::Type;
-    using FieldCoords = Field::Coordinates;
 
     FieldCoords getCoord(const QMouseEvent& event) const;
 

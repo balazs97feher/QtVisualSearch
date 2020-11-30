@@ -37,18 +37,12 @@ MainWindow::~MainWindow()
     delete verticalLayout;
 }
 
-void MainWindow::paintEvent(QPaintEvent *event)
-{
-    static int id = 0;
-    if(DEBUG_MSGS_ON) qDebug() << "MainWindow paint: " << id++ << Qt::endl;
-}
-
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     windowSize = event->size();
 
-    if(DEBUG_MSGS_ON) qDebug() << "MainWindow resize: " << windowSize.width() << '/' << windowSize.height() << Qt::endl;
+    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] resize: " << windowSize.width() << '/' << windowSize.height() << Qt::endl;
 }
 
 void MainWindow::rowOrColCountChanged()
@@ -57,6 +51,6 @@ void MainWindow::rowOrColCountChanged()
 
     update();
 
-    if(DEBUG_MSGS_ON) qDebug() << "colCount : " << colCount->toPlainText()
+    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] colCount : " << colCount->toPlainText()
                                << " rowCount: " << rowCount->toPlainText() << Qt::endl;
 }
