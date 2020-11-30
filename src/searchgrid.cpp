@@ -32,6 +32,18 @@ void SearchGrid::clearStart()
     startField = nullptr;
 }
 
+void SearchGrid::setDest(const SearchGrid::FieldCoords &coord)
+{
+    destField = &at(coord);
+    at(coord).type = FieldType::Destination;
+}
+
+void SearchGrid::clearDest()
+{
+    destField->type = FieldType::Empty;
+    destField = nullptr;
+}
+
 Field& SearchGrid::at(const SearchGrid::FieldCoords &coord)
 {
     return fields[coord.rowNum][coord.colNum];

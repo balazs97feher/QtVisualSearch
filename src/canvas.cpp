@@ -34,13 +34,16 @@ void Canvas::paintEvent(QPaintEvent *event)
             switch (searchGrid.fields[i][j].type) {
                 case FieldType::Empty:
                     painter.setBrush(Qt::green);
-                    break;
+                break;
                 case FieldType::Wall:
                     painter.setBrush(Qt::red);
-                    break;
+                break;
                 case FieldType::Start:
                     painter.setBrush(Qt::blue);
-                    break;
+                break;
+                case FieldType::Destination:
+                    painter.setBrush(Qt::black);
+                break;
             }
             painter.drawRect(rect);
         }
@@ -80,10 +83,19 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 {
     auto clickCoord = getCoord(*event);
 
-    if(!searchGrid.startField){
+    if(!searchGrid.startField)
+    {
         searchGrid.setStart(clickCoord);
     }
-    else searchGrid.clearStart();
+    else if(!searchGrid.destField)
+    {
+        searchGrid.setDest(clickCoord);
+    }
+    else
+    {
+        searchGrid.clearStart();
+        searchGrid.clearDest();
+    }
 }
 
 Canvas::FieldCoords Canvas::getCoord(const QMouseEvent &event) const

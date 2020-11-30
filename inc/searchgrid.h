@@ -17,6 +17,8 @@ public:
     void setRowAndColCount(uint rowCount, uint colCount);
     void setStart(const FieldCoords &coord);
     void clearStart();
+    void setDest(const FieldCoords &coord);
+    void clearDest();
     Field& at(const FieldCoords &coord);
 
 private:
