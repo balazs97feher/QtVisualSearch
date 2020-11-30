@@ -5,28 +5,46 @@
 #include <QRectF>
 #include <QPaintEvent>
 
-Canvas::Canvas(QWidget *parent) : QWidget(parent), rowCount(9), colCount(16)
+Canvas::Canvas(QWidget *parent) : QWidget(parent), searchGrid(9, 16)
 {
 
+}
+
+void Canvas::setRowAndColCount(uint rowCount, uint colCount)
+{
+    searchGrid.setRowAndColCount(rowCount, colCount);
+
+    rectWidth = float(canvasSize.width())/searchGrid.colCount;
+    rectHeight = float(canvasSize.height())/searchGrid.rowCount;
 }
 
 
 void Canvas::paintEvent(QPaintEvent *event)
 {
-    const float rectWidth = float(canvasSize.width())/colCount;
-    const float rectHeight = float(canvasSize.height())/rowCount;
-
     QPainter painter(this);
     QPen pen;
     pen.setWidth(2);
     pen.setColor(QColor(100,100,100));
     painter.setPen(pen);
-    painter.setBrush(QColor(150,200,200));
 
-    for(uint i = 0; i < rowCount; i++)
+    for(uint i = 0; i < searchGrid.rowCount; i++)
     {
-        for(uint j = 0; j < colCount; j++){
+        for(uint j = 0; j < searchGrid.colCount; j++){
             QRectF rect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
+            switch (searchGrid.fields[i][j].type) {
+                case FieldType::Empty:
+                    painter.setBrush(Qt::green);
+                break;
+                case FieldType::Wall:
+                    painter.setBrush(Qt::red);
+                break;
+                case FieldType::Start:
+                    painter.setBrush(Qt::blue);
+                break;
+                case FieldType::Destination:
+                    painter.setBrush(Qt::black);
+                break;
+            }
             painter.drawRect(rect);
         }
     }
@@ -39,6 +57,52 @@ void Canvas::paintEvent(QPaintEvent *event)
 void Canvas::resizeEvent(QResizeEvent *event)
 {
     canvasSize = event->size();
+    rectWidth = float(canvasSize.width())/searchGrid.colCount;
+    rectHeight = float(canvasSize.height())/searchGrid.rowCount;
 
     if(DEBUG_MSGS_ON) qDebug() << "Canvas resize: " << canvasSize.width() << '/' << canvasSize.height() << Qt::endl;
+}
+
+
+void Canvas::mouseReleaseEvent(QMouseEvent *event)
+{
+    auto clickCoord = getCoord(*event);
+
+    if(searchGrid.at(clickCoord).type == FieldType::Empty)
+        searchGrid.at(clickCoord).type = FieldType::Wall;
+    else if(searchGrid.at(clickCoord).type == FieldType::Wall)
+        searchGrid.at(clickCoord).type = FieldType::Empty;
+
+    update();
+
+    if(DEBUG_MSGS_ON) qDebug() << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
+}
+
+
+void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    auto clickCoord = getCoord(*event);
+
+    if(!searchGrid.startField)
+    {
+        searchGrid.setStart(clickCoord);
+    }
+    else if(!searchGrid.destField)
+    {
+        searchGrid.setDest(clickCoord);
+    }
+    else
+    {
+        searchGrid.clearStart();
+        searchGrid.clearDest();
+    }
+}
+
+Canvas::FieldCoords Canvas::getCoord(const QMouseEvent &event) const
+{
+    FieldCoords coord;
+    coord.rowNum = uint(event.localPos().y() / rectHeight);
+    coord.colNum = uint(event.localPos().x() / rectWidth);
+
+    return coord;
 }
