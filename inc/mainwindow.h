@@ -8,8 +8,10 @@
 #include <QSize>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <QTextEdit>
+#include <QLineEdit>
 #include <QPushButton>
+#include <QIntValidator>
+#include <memory>
 
 #include "canvas.h"
 
@@ -26,11 +28,12 @@ protected:
 
 private:
     QSize windowSize;
-    QVBoxLayout* verticalLayout;
+    std::unique_ptr<QVBoxLayout> verticalLayout;
     QHBoxLayout* controlArea;
-    QTextEdit* rowCount;
+    QLineEdit* colCount;
+    QLineEdit* rowCount;
+    std::unique_ptr<QIntValidator> intValidator;
     QPushButton* setRowAndColCount;
-    QTextEdit* colCount;
     Canvas* canvas;
 
 private slots:

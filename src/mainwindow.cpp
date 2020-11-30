@@ -3,25 +3,30 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QPen>
-#include <QTextEdit>
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), windowSize(1600, 900)
 {
     resize(windowSize);
-    verticalLayout = new QVBoxLayout();
+    verticalLayout = std::make_unique<QVBoxLayout>();
     controlArea = new QHBoxLayout();
     controlArea->setAlignment(Qt::AlignLeft);
     verticalLayout->addLayout(controlArea);
     canvas = new Canvas();
     verticalLayout->addWidget(canvas);
 
-    rowCount = new QTextEdit("9");
-    colCount = new QTextEdit("16");
-    rowCount->setFixedSize(100,30);
-    colCount->setFixedSize(100,30);
+    rowCount = new QLineEdit("9");
+    colCount = new QLineEdit("16");
+    rowCount->setFixedSize(30,25);
+    rowCount->setAlignment(Qt::AlignCenter);
+    colCount->setAlignment(Qt::AlignCenter);
+    colCount->setFixedSize(30,25);
+    intValidator = std::make_unique<QIntValidator>(0,99);
+    rowCount->setValidator(intValidator.get());
+    colCount->setValidator(intValidator.get());
+
     setRowAndColCount = new QPushButton("Set");
-    setRowAndColCount->setFixedSize(50, 30);
+    setRowAndColCount->setFixedSize(50, 25);
 
     controlArea->addWidget(colCount);
     controlArea->addWidget(rowCount);
@@ -29,12 +34,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     QObject::connect(setRowAndColCount, &QPushButton::clicked, this, &MainWindow::rowOrColCountChanged);
 
-    setLayout(verticalLayout);
+    setLayout(verticalLayout.get());
 }
 
 MainWindow::~MainWindow()
 {
-    delete verticalLayout;
+
 }
 
 
@@ -47,10 +52,10 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::rowOrColCountChanged()
 {
-    canvas->setRowAndColCount(rowCount->toPlainText().toUInt(), colCount->toPlainText().toUInt());
+    canvas->setRowAndColCount(rowCount->text().toUInt(), colCount->text().toUInt());
 
     update();
 
-    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] colCount : " << colCount->toPlainText()
-                               << " rowCount: " << rowCount->toPlainText() << Qt::endl;
+    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] colCount : " << colCount->text()
+                               << " rowCount: " << rowCount->text() << Qt::endl;
 }
