@@ -12,14 +12,10 @@ Canvas::Canvas(QWidget *parent) : QWidget(parent), searchGrid(9, 16)
 
 void Canvas::setRowAndColCount(uint rowCount, uint colCount)
 {
-    searchGrid.rowCount = rowCount;
-    searchGrid.colCount = colCount;
+    searchGrid.setRowAndColCount(rowCount, colCount);
+
     rectWidth = float(canvasSize.width())/searchGrid.colCount;
     rectHeight = float(canvasSize.height())/searchGrid.rowCount;
-
-    searchGrid.fields.clear();
-    searchGrid.fields.resize(rowCount);
-    for(auto &row : searchGrid.fields) row.resize(colorCount());
 }
 
 
@@ -35,7 +31,7 @@ void Canvas::paintEvent(QPaintEvent *event)
     {
         for(uint j = 0; j < searchGrid.colCount; j++){
             QRectF rect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
-            if(searchGrid.fields[i][j] == 1) painter.setBrush(Qt::red);
+            if(searchGrid.fields[i][j] == SearchGrid::FieldType::Wall) painter.setBrush(Qt::red);
             else painter.setBrush(Qt::green);
             painter.drawRect(rect);
         }
@@ -60,7 +56,11 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     int row = event->localPos().y() / rectHeight;
     int col = event->localPos().x() / rectWidth;
-    searchGrid.fields[row][col] = 1;
+
+    if(searchGrid.fields[row][col] == SearchGrid::FieldType::Empty)
+        searchGrid.fields[row][col] = SearchGrid::FieldType::Wall;
+    else if(searchGrid.fields[row][col] == SearchGrid::FieldType::Wall)
+        searchGrid.fields[row][col] = SearchGrid::FieldType::Empty;
 
     update();
 
