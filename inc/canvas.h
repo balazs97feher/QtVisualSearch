@@ -21,11 +21,17 @@ protected:
     virtual void paintEvent(QPaintEvent *event) override;
     virtual void resizeEvent(QResizeEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
 
 private:
     QSize canvasSize;
     float rectWidth, rectHeight;
     SearchGrid searchGrid;
+
+    using FieldType = Field::Type;
+    using FieldCoords = Field::Coordinates;
+
+    FieldCoords getCoord(const QMouseEvent& event) const;
 
 };
 

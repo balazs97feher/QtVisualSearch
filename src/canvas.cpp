@@ -31,8 +31,17 @@ void Canvas::paintEvent(QPaintEvent *event)
     {
         for(uint j = 0; j < searchGrid.colCount; j++){
             QRectF rect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
-            if(searchGrid.fields[i][j] == SearchGrid::FieldType::Wall) painter.setBrush(Qt::red);
-            else painter.setBrush(Qt::green);
+            switch (searchGrid.fields[i][j].type) {
+                case FieldType::Empty:
+                    painter.setBrush(Qt::green);
+                    break;
+                case FieldType::Wall:
+                    painter.setBrush(Qt::red);
+                    break;
+                case FieldType::Start:
+                    painter.setBrush(Qt::blue);
+                    break;
+            }
             painter.drawRect(rect);
         }
     }
@@ -54,15 +63,34 @@ void Canvas::resizeEvent(QResizeEvent *event)
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
-    int row = event->localPos().y() / rectHeight;
-    int col = event->localPos().x() / rectWidth;
+    auto clickCoord = getCoord(*event);
 
-    if(searchGrid.fields[row][col] == SearchGrid::FieldType::Empty)
-        searchGrid.fields[row][col] = SearchGrid::FieldType::Wall;
-    else if(searchGrid.fields[row][col] == SearchGrid::FieldType::Wall)
-        searchGrid.fields[row][col] = SearchGrid::FieldType::Empty;
+    if(searchGrid.at(clickCoord).type == FieldType::Empty)
+        searchGrid.at(clickCoord).type = FieldType::Wall;
+    else if(searchGrid.at(clickCoord).type == FieldType::Wall)
+        searchGrid.at(clickCoord).type = FieldType::Empty;
 
     update();
 
     if(DEBUG_MSGS_ON) qDebug() << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
+}
+
+
+void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    auto clickCoord = getCoord(*event);
+
+    if(!searchGrid.startField){
+        searchGrid.setStart(clickCoord);
+    }
+    else searchGrid.clearStart();
+}
+
+Canvas::FieldCoords Canvas::getCoord(const QMouseEvent &event) const
+{
+    FieldCoords coord;
+    coord.rowNum = uint(event.localPos().y() / rectHeight);
+    coord.colNum = uint(event.localPos().x() / rectWidth);
+
+    return coord;
 }

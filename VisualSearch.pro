@@ -20,6 +20,7 @@ SOURCES += \
 HEADERS += \
     inc/canvas.h \
     inc/debug.h \
+    inc/field.h \
     inc/mainwindow.h \
     inc/searchgrid.h
 

@@ -1,26 +1,38 @@
 #include "searchgrid.h"
 
 SearchGrid::SearchGrid(uint rowCount, uint colCount) :
-    rowCount(rowCount), colCount(colCount)
+    rowCount(rowCount), colCount(colCount), startField(nullptr), destField(nullptr)
 {
     fields.resize(rowCount);
-    for(auto &row : fields)
-    {
-        row.resize(colCount);
-        for(auto &field : row) field = FieldType::Empty;
-    }
+    for(auto &row : fields) row.resize(colCount);
 }
 
 void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
 {
+    startField = nullptr;
+    destField = nullptr;
+
     this->rowCount = rowCount;
     this->colCount = colCount;
 
     fields.clear();
     fields.resize(rowCount);
-    for(auto &row : fields)
-    {
-        row.resize(colCount);
-        for(auto &field : row) field = FieldType::Empty;
-    }
+    for(auto &row : fields) row.resize(colCount);
+}
+
+void SearchGrid::setStart(const SearchGrid::FieldCoords &coord)
+{
+    startField = &at(coord);
+    at(coord).type = FieldType::Start;
+}
+
+void SearchGrid::clearStart()
+{
+    startField->type = FieldType::Empty;
+    startField = nullptr;
+}
+
+Field& SearchGrid::at(const SearchGrid::FieldCoords &coord)
+{
+    return fields[coord.rowNum][coord.colNum];
 }
