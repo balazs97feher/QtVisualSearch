@@ -15,7 +15,7 @@ class Canvas : public QWidget
     using FieldCoords = Field::Coordinates;
 
 public:
-    explicit Canvas(QWidget *parent = nullptr);
+    explicit Canvas(SearchGrid &searchGrid);
 
     void setRowAndColCount(uint rowCount, uint colCount);
 
@@ -30,7 +30,7 @@ protected:
 private:
     QSize canvasSize;
     float rectWidth, rectHeight;
-    SearchGrid searchGrid;
+    SearchGrid &searchGrid;
 
     FieldCoords getCoord(const QMouseEvent& event) const;
 

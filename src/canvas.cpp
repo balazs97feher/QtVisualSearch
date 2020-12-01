@@ -5,7 +5,7 @@
 #include <QRectF>
 #include <QPaintEvent>
 
-Canvas::Canvas(QWidget *parent) : QWidget(parent), searchGrid(9, 16)
+Canvas::Canvas(SearchGrid &searchGrid) : QWidget(nullptr), searchGrid(searchGrid)
 {
 
 }

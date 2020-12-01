@@ -15,6 +15,7 @@
 #include <memory>
 
 #include "canvas.h"
+#include "searchgrid.h"
 
 class MainWindow : public QWidget
 {
@@ -38,6 +39,7 @@ private:
     QComboBox *algorithmList;
     QPushButton *startSearch;
     Canvas* canvas;
+    SearchGrid searchGrid;
 
 private slots:
     void rowOrColCountChanged();

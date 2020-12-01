@@ -6,14 +6,14 @@
 #include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), windowSize(1600, 900)
+    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48)
 {
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
     controlArea = new QHBoxLayout();
     controlArea->setAlignment(Qt::AlignLeft);
     verticalLayout->addLayout(controlArea);
-    canvas = new Canvas();
+    canvas = new Canvas(searchGrid);
     verticalLayout->addWidget(canvas);
 
     rowCount = new QLineEdit("9");
@@ -72,12 +72,13 @@ void MainWindow::rowOrColCountChanged()
 
 void MainWindow::runAlgorithm()
 {
-//    std::shared_ptr<PathFinder> algorithm;
+    std::shared_ptr<PathFinder> algorithm;
 
-//    switch (algorithmList->currentIndex()) {
-//        case 0:
-//        algorithm = std::make_shared<BFS>(searchGrid);
-//        break;
-//    }
+    switch (algorithmList->currentIndex()) {
+        case 0:
+        algorithm = std::make_shared<BFS>(searchGrid);
+        break;
+    }
 
+    algorithm->initialize();
 }
