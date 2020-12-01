@@ -22,6 +22,7 @@ HEADERS += \
     inc/debug.h \
     inc/field.h \
     inc/mainwindow.h \
+    inc/pathfinder.h \
     inc/searchgrid.h
 
 # Default rules for deployment.
