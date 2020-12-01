@@ -17,22 +17,31 @@ MainWindow::MainWindow(QWidget *parent)
 
     rowCount = new QLineEdit("9");
     colCount = new QLineEdit("16");
-    rowCount->setFixedSize(30,25);
+    rowCount->setFixedSize(30, 25);
     rowCount->setAlignment(Qt::AlignCenter);
     colCount->setAlignment(Qt::AlignCenter);
-    colCount->setFixedSize(30,25);
-    intValidator = std::make_unique<QIntValidator>(0,99);
+    colCount->setFixedSize(30, 25);
+    intValidator = std::make_unique<QIntValidator>(0, 99);
     rowCount->setValidator(intValidator.get());
     colCount->setValidator(intValidator.get());
 
     setRowAndColCount = new QPushButton("Set");
-    setRowAndColCount->setFixedSize(50, 25);
+    setRowAndColCount->setFixedSize(60, 25);
+
+    algorithmList = new QComboBox();
+    algorithmList->insertItem(0, "BFS");
+    algorithmList->setFixedSize(60, 25);
+    startSearch = new QPushButton("Start");
+    startSearch->setFixedSize(60, 25);
 
     controlArea->addWidget(colCount);
     controlArea->addWidget(rowCount);
     controlArea->addWidget(setRowAndColCount);
+    controlArea->addWidget(algorithmList);
+    controlArea->addWidget(startSearch);
 
     QObject::connect(setRowAndColCount, &QPushButton::clicked, this, &MainWindow::rowOrColCountChanged);
+    QObject::connect(startSearch, &QPushButton::clicked, this, &MainWindow::runAlgorithm);
 
     setLayout(verticalLayout.get());
 }
@@ -58,4 +67,9 @@ void MainWindow::rowOrColCountChanged()
 
     if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] colCount : " << colCount->text()
                                << " rowCount: " << rowCount->text() << Qt::endl;
+}
+
+void MainWindow::runAlgorithm()
+{
+
 }

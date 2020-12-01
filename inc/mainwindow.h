@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QIntValidator>
+#include <QComboBox>
 #include <memory>
 
 #include "canvas.h"
@@ -29,14 +30,17 @@ protected:
 private:
     QSize windowSize;
     std::unique_ptr<QVBoxLayout> verticalLayout;
-    QHBoxLayout* controlArea;
-    QLineEdit* colCount;
-    QLineEdit* rowCount;
+    QHBoxLayout *controlArea;
+    QLineEdit *colCount;
+    QLineEdit *rowCount;
     std::unique_ptr<QIntValidator> intValidator;
-    QPushButton* setRowAndColCount;
+    QPushButton *setRowAndColCount;
+    QComboBox *algorithmList;
+    QPushButton *startSearch;
     Canvas* canvas;
 
 private slots:
     void rowOrColCountChanged();
+    void runAlgorithm();
 };
 #endif // MAINWINDOW_H
