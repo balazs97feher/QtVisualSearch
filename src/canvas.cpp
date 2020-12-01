@@ -5,7 +5,7 @@
 #include <QRectF>
 #include <QPaintEvent>
 
-Canvas::Canvas(QWidget *parent) : QWidget(parent), searchGrid(9, 16)
+Canvas::Canvas(QWidget *parent) : QWidget(parent), searchGrid(9, 16), dragAndDrawWalls(false)
 {
 
 }
@@ -70,12 +70,16 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     auto clickCoord = getCoord(*event);
 
-    if(searchGrid.at(clickCoord).type == FieldType::Empty)
-        searchGrid.at(clickCoord).type = FieldType::Wall;
-    else if(searchGrid.at(clickCoord).type == FieldType::Wall)
-        searchGrid.at(clickCoord).type = FieldType::Empty;
+    if(!dragAndDrawWalls)
+    {
+        if(searchGrid.at(clickCoord).type == FieldType::Empty)
+            searchGrid.at(clickCoord).type = FieldType::Wall;
+        else if(searchGrid.at(clickCoord).type == FieldType::Wall)
+            searchGrid.at(clickCoord).type = FieldType::Empty;
 
-    update();
+        update();
+    }
+    else dragAndDrawWalls = false;
 
     if(DEBUG_MSGS_ON) qDebug() << "[Canvas] mouse release " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
@@ -99,6 +103,8 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
         searchGrid.clearDest();
     }
 
+    update();
+
     if(DEBUG_MSGS_ON) qDebug() << "[Canvas] double click " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
 
@@ -109,4 +115,21 @@ Canvas::FieldCoords Canvas::getCoord(const QMouseEvent &event) const
     coord.colNum = uint(event.localPos().x() / rectWidth);
 
     return coord;
+}
+
+
+void Canvas::mouseMoveEvent(QMouseEvent *event)
+{
+    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] mouse move " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
+
+    auto cursorCoord = getCoord(*event);
+
+    auto &field = searchGrid.at(cursorCoord);
+    if(field.type == FieldType::Empty)
+    {
+        field.type = FieldType::Wall;
+        dragAndDrawWalls = true;
+    }
+
+    update();
 }
