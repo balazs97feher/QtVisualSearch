@@ -12,12 +12,14 @@ INCLUDEPATH += \
     inc/
 
 SOURCES += \
+    src/bfs.cpp \
     src/searchgrid.cpp \
     src/canvas.cpp \
     src/main.cpp \
     src/mainwindow.cpp
 
 HEADERS += \
+    inc/bfs.h \
     inc/canvas.h \
     inc/debug.h \
     inc/field.h \

@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QPen>
+#include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), windowSize(1600, 900)
@@ -71,5 +72,12 @@ void MainWindow::rowOrColCountChanged()
 
 void MainWindow::runAlgorithm()
 {
+//    std::shared_ptr<PathFinder> algorithm;
+
+//    switch (algorithmList->currentIndex()) {
+//        case 0:
+//        algorithm = std::make_shared<BFS>(searchGrid);
+//        break;
+//    }
 
 }

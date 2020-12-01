@@ -13,7 +13,7 @@ public:
     virtual bool advance() = 0;
     virtual std::list<Field::Coordinates> getPath() = 0;
 
-private:
+protected:
     SearchGrid &grid;
 };
 

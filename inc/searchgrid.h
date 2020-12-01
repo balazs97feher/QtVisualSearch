@@ -5,10 +5,12 @@
 #include <QVector>
 
 class Canvas;
+class BFS;
 
 class SearchGrid
 {
     friend class Canvas;
+    friend class BFS;
     using FieldType = Field::Type;
     using FieldCoords = Field::Coordinates;
 
