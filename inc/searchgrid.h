@@ -21,7 +21,7 @@ public:
     void clearStart();
     void setDest(const FieldCoords &coord);
     void clearDest();
-    Field& at(const FieldCoords &coord);
+    Field* at(const FieldCoords &coord);
 
 private:
     QVector<QVector<Field>> fields;

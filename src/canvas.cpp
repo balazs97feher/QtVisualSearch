@@ -70,10 +70,10 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     auto clickCoord = getCoord(*event);
 
-    if(searchGrid.at(clickCoord).type == FieldType::Empty)
-        searchGrid.at(clickCoord).type = FieldType::Wall;
-    else if(searchGrid.at(clickCoord).type == FieldType::Wall)
-        searchGrid.at(clickCoord).type = FieldType::Empty;
+    if(searchGrid.at(clickCoord)->type == FieldType::Empty)
+        searchGrid.at(clickCoord)->type = FieldType::Wall;
+    else if(searchGrid.at(clickCoord)->type == FieldType::Wall)
+        searchGrid.at(clickCoord)->type = FieldType::Empty;
 
     update();
 
