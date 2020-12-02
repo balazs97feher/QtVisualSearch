@@ -24,6 +24,7 @@ void SearchGrid::setStart(const SearchGrid::FieldCoords &coord)
 {
     startField = &at(coord);
     at(coord).type = FieldType::Start;
+    startCoords = coord;
 }
 
 void SearchGrid::clearStart()
@@ -36,6 +37,7 @@ void SearchGrid::setDest(const SearchGrid::FieldCoords &coord)
 {
     destField = &at(coord);
     at(coord).type = FieldType::Destination;
+    destCoords = coord;
 }
 
 void SearchGrid::clearDest()

@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     canvas = new Canvas(searchGrid);
     verticalLayout->addWidget(canvas);
 
-    rowCount = new QLineEdit("9");
-    colCount = new QLineEdit("16");
+    rowCount = new QLineEdit("27");
+    colCount = new QLineEdit("48");
     rowCount->setFixedSize(30, 25);
     rowCount->setAlignment(Qt::AlignCenter);
     colCount->setAlignment(Qt::AlignCenter);

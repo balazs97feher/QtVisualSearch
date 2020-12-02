@@ -28,6 +28,7 @@ private:
     uint rowCount, colCount;
 
     Field *startField, *destField;
+    FieldCoords startCoords, destCoords;
 };
 
 #endif // SEARCHGRID_H
