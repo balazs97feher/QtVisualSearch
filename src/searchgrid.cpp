@@ -48,7 +48,7 @@ void SearchGrid::clearDest()
 
 Field* SearchGrid::at(const SearchGrid::FieldCoords &coord)
 {
-    if(coord.rowNum > 0 && coord.colNum > 0 && coord.colNum < colCount && coord.rowNum < rowCount)
+    if(coord.rowNum >= 0 && coord.colNum >= 0 && coord.colNum < colCount && coord.rowNum < rowCount)
         return &fields[coord.rowNum][coord.colNum];
 
     return nullptr;

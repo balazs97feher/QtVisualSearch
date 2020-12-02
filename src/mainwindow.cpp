@@ -81,4 +81,11 @@ void MainWindow::runAlgorithm()
     }
 
     algorithm->initialize();
+    while(algorithm->advance())
+    {
+        if(DEBUG_MSGS_ON) qDebug() << "[MaindWindow] algorithm advanced" << Qt::endl;
+        update();
+    }
+
+    if(DEBUG_MSGS_ON) qDebug() << "[MaindWindow] algorithm finished" << Qt::endl;
 }

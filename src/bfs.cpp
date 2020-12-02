@@ -1,6 +1,6 @@
 #include "bfs.h"
 
-BFS::BFS(SearchGrid &grid) : PathFinder(grid), dirIndex(0)
+BFS::BFS(SearchGrid &grid) : PathFinder(grid), dirIndex(4)
 {
 
 }
@@ -24,29 +24,28 @@ bool BFS::initialize()
 
 bool BFS::advance()
 {
-    if(fieldsToCheck.empty()) return false;
+    if(fieldsToCheck.empty() && dirIndex == 4) return false;
 
-    if(dirIndex == 0)
+    if(dirIndex == 4)
     {
         nextField = fieldsToCheck.front();
         fieldsToCheck.pop_front();
+        dirIndex = 0;
     }
 
-    Field *neighbor = nullptr;
-    FieldCoords neighborCoords;
+    FieldCoords neighborCoords = getNeighborCoords(nextField, PathFinder::directions[dirIndex]);
+    Field *neighbor = grid.at(neighborCoords);
 
-    while(neighbor == nullptr)
-    {
-        neighborCoords = getNeighborCoords(nextField, directions[dirIndex]);
-        neighbor = grid.at(neighborCoords);
-        dirIndex = (dirIndex + 1) % 4;
-    }
+    if(DEBUG_MSGS_ON) qDebug() << "[BFS] field row: " << nextField.rowNum << " col: " << nextField.colNum << Qt::endl;
+    if(DEBUG_MSGS_ON) qDebug() << "[BFS] neigbor row: " << neighborCoords.rowNum << " col: " << neighborCoords.colNum << Qt::endl;
 
-    if(neighbor->type == Field::Type::Empty)
+    if(neighbor && neighbor->type == Field::Type::Empty)
     {
         neighbor->type = Field::Type::Visited;
         fieldsToCheck.push_back(neighborCoords);
     }
+
+    dirIndex++;
 
     return true;
 }

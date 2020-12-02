@@ -13,7 +13,7 @@ public:
     {
       Up, Right, Down, Left
     };
-    static constexpr Direction directions[4] = {Direction::Up, Direction::Right, Direction::Down, Direction::Left};
+    static constexpr Direction directions[] = {Direction::Up, Direction::Right, Direction::Down, Direction::Left};
 
     PathFinder(SearchGrid &grid) : grid(grid) {};
 
@@ -23,27 +23,27 @@ public:
 
 protected:
     SearchGrid &grid;
-    Field::Coordinates getNeighborCoords(FieldCoords field, const Direction &direction);
+
+    Field::Coordinates getNeighborCoords(FieldCoords field, const Direction &direction)
+    {
+        switch (direction) {
+            case PathFinder::Direction::Up:
+                field.rowNum++;
+            break;
+            case PathFinder::Direction::Right:
+                field.colNum++;
+            break;
+            case PathFinder::Direction::Down:
+                field.rowNum--;
+            break;
+            case PathFinder::Direction::Left:
+                field.colNum--;
+            break;
+        }
+
+        return field;
+    }
+
 };
 
 #endif // PATHFINDER_H
-
-Field::Coordinates PathFinder::getNeighborCoords(FieldCoords field, const PathFinder::Direction &direction)
-{
-    switch (direction) {
-        case PathFinder::Direction::Up:
-            field.rowNum++;
-        break;
-        case PathFinder::Direction::Right:
-            field.colNum++;
-        break;
-        case PathFinder::Direction::Down:
-            field.rowNum--;
-        break;
-        case PathFinder::Direction::Left:
-            field.colNum--;
-        break;
-    }
-
-    return field;
-}
