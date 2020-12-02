@@ -1,6 +1,6 @@
 #include "bfs.h"
 
-BFS::BFS(SearchGrid &grid) : PathFinder(grid)
+BFS::BFS(SearchGrid &grid) : PathFinder(grid), dirIndex(0)
 {
 
 }
@@ -25,14 +25,28 @@ bool BFS::initialize()
 bool BFS::advance()
 {
     if(fieldsToCheck.empty()) return false;
-    static uint direction = 0;
 
-    auto nextField = fieldsToCheck.front();
-    fieldsToCheck.pop_front();
+    if(dirIndex == 0)
+    {
+        nextField = fieldsToCheck.front();
+        fieldsToCheck.pop_front();
+    }
 
-//    switch (direction) {
+    Field *neighbor = nullptr;
+    FieldCoords neighborCoords;
 
-//    }
+    while(neighbor == nullptr)
+    {
+        neighborCoords = getNeighborCoords(nextField, directions[dirIndex]);
+        neighbor = grid.at(neighborCoords);
+        dirIndex = (dirIndex + 1) % 4;
+    }
+
+    if(neighbor->type == Field::Type::Empty)
+    {
+        neighbor->type = Field::Type::Visited;
+        fieldsToCheck.push_back(neighborCoords);
+    }
 
     return true;
 }

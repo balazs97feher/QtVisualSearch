@@ -18,6 +18,8 @@ public:
 private:
     using FieldCoords = Field::Coordinates;
 
+    FieldCoords nextField;
+    uint dirIndex;
     std::list<FieldCoords> fieldsToCheck;
 };
 
