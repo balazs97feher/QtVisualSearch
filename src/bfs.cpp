@@ -24,32 +24,37 @@ bool BFS::initialize()
 
 bool BFS::advance()
 {
-    if(fieldsToCheck.empty() && dirIndex == 4) return false;
+    static uint callId = 0;
+    if(DEBUG_MSGS_ON) qDebug() << "[BFS] advance called " << callId++ << Qt::endl;
 
-    if(dirIndex == 4)
-    {
-        nextField = fieldsToCheck.front();
-        fieldsToCheck.pop_front();
-        dirIndex = 0;
-    }
+    if(fieldsToCheck.empty() && dirIndex == 4) return false;
 
     Field *neighbor = nullptr;
     FieldCoords neighborCoords;
-    while((!neighbor || neighbor->type != Field::Type::Empty) && dirIndex < 4)
+
+    while (!neighbor || neighbor->type != Field::Type::Empty)
     {
-        neighborCoords = getNeighborCoords(nextField, PathFinder::directions[dirIndex]);
-        neighbor = grid.at(neighborCoords);
-        dirIndex++;
+        if(dirIndex == 4)
+        {
+            if(fieldsToCheck.empty()) return false;
+            nextField = fieldsToCheck.front();
+            fieldsToCheck.pop_front();
+            dirIndex = 0;
+        }
+
+        while((!neighbor || neighbor->type != Field::Type::Empty) && dirIndex < 4)
+        {
+            neighborCoords = getNeighborCoords(nextField, PathFinder::directions[dirIndex]);
+            neighbor = grid.at(neighborCoords);
+            dirIndex++;
+        }
     }
 
-    if(DEBUG_MSGS_ON) qDebug() << "[BFS] field row: " << nextField.rowNum << " col: " << nextField.colNum << Qt::endl;
-    if(DEBUG_MSGS_ON) qDebug() << "[BFS] neigbor row: " << neighborCoords.rowNum << " col: " << neighborCoords.colNum << Qt::endl;
+    neighbor->type = Field::Type::Visited;
+    fieldsToCheck.push_back(neighborCoords);
 
-    if(neighbor && neighbor->type == Field::Type::Empty)
-    {
-        neighbor->type = Field::Type::Visited;
-        fieldsToCheck.push_back(neighborCoords);
-    }
+    static uint visitId = 0;
+    if(DEBUG_MSGS_ON) qDebug() << "[BFS] visited new neighbor " << visitId++ << Qt::endl;
 
     return true;
 }
