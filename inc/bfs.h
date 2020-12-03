@@ -5,6 +5,7 @@
 
 #include "pathfinder.h"
 #include <list>
+#include <QVector>
 
 class BFS: public PathFinder
 {
@@ -18,9 +19,10 @@ public:
 private:
     using FieldCoords = Field::Coordinates;
 
-    FieldCoords nextField;
+    FieldCoords currentField;
     uint dirIndex;
     std::list<FieldCoords> fieldsToCheck;
+    QVector<QVector<Field*>> previousField;
 };
 
 #endif // BFS_H

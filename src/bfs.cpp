@@ -2,7 +2,12 @@
 
 BFS::BFS(SearchGrid &grid) : PathFinder(grid), dirIndex(4)
 {
-
+    previousField.resize(grid.rowCount);
+    for(auto &row : previousField)
+    {
+        row.resize(grid.colCount);
+        for(auto &p : row) p = nullptr;
+    }
 }
 
 
@@ -37,14 +42,14 @@ bool BFS::advance()
         if(dirIndex == 4)
         {
             if(fieldsToCheck.empty()) return false;
-            nextField = fieldsToCheck.front();
+            currentField = fieldsToCheck.front();
             fieldsToCheck.pop_front();
             dirIndex = 0;
         }
 
         while((!neighbor || neighbor->type != Field::Type::Empty) && dirIndex < 4)
         {
-            neighborCoords = getNeighborCoords(nextField, PathFinder::directions[dirIndex]);
+            neighborCoords = getNeighborCoords(currentField, PathFinder::directions[dirIndex]);
             neighbor = grid.at(neighborCoords);
             dirIndex++;
         }
