@@ -33,8 +33,14 @@ bool BFS::advance()
         dirIndex = 0;
     }
 
-    FieldCoords neighborCoords = getNeighborCoords(nextField, PathFinder::directions[dirIndex]);
-    Field *neighbor = grid.at(neighborCoords);
+    Field *neighbor = nullptr;
+    FieldCoords neighborCoords;
+    while((!neighbor || neighbor->type != Field::Type::Empty) && dirIndex < 4)
+    {
+        neighborCoords = getNeighborCoords(nextField, PathFinder::directions[dirIndex]);
+        neighbor = grid.at(neighborCoords);
+        dirIndex++;
+    }
 
     if(DEBUG_MSGS_ON) qDebug() << "[BFS] field row: " << nextField.rowNum << " col: " << nextField.colNum << Qt::endl;
     if(DEBUG_MSGS_ON) qDebug() << "[BFS] neigbor row: " << neighborCoords.rowNum << " col: " << neighborCoords.colNum << Qt::endl;
@@ -44,8 +50,6 @@ bool BFS::advance()
         neighbor->type = Field::Type::Visited;
         fieldsToCheck.push_back(neighborCoords);
     }
-
-    dirIndex++;
 
     return true;
 }
