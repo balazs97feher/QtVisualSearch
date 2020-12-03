@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QPen>
+#include <QTimer>
 #include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -42,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
     controlArea->addWidget(startSearch);
 
     QObject::connect(setRowAndColCount, &QPushButton::clicked, this, &MainWindow::rowOrColCountChanged);
-    QObject::connect(startSearch, &QPushButton::clicked, this, &MainWindow::runAlgorithm);
+    QObject::connect(startSearch, &QPushButton::clicked, this, &MainWindow::startAlgorithm);
 
     setLayout(verticalLayout.get());
 }
@@ -70,10 +71,8 @@ void MainWindow::rowOrColCountChanged()
                                << " rowCount: " << rowCount->text() << Qt::endl;
 }
 
-void MainWindow::runAlgorithm()
+void MainWindow::startAlgorithm()
 {
-    std::shared_ptr<PathFinder> algorithm;
-
     switch (algorithmList->currentIndex()) {
         case 0:
         algorithm = std::make_shared<BFS>(searchGrid);
@@ -81,11 +80,15 @@ void MainWindow::runAlgorithm()
     }
 
     algorithm->initialize();
-    while(algorithm->advance())
-    {
-        if(DEBUG_MSGS_ON) qDebug() << "[MaindWindow] algorithm advanced" << Qt::endl;
-        update();
-    }
+    QTimer::singleShot(100, this, &MainWindow::advanceAlgorithm);
 
-    if(DEBUG_MSGS_ON) qDebug() << "[MaindWindow] algorithm finished" << Qt::endl;
+}
+
+void MainWindow::advanceAlgorithm()
+{
+    if(algorithm->advance())
+    {
+        update();
+        QTimer::singleShot(100, this, &MainWindow::advanceAlgorithm);
+    }
 }

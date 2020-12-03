@@ -46,6 +46,9 @@ void Canvas::paintEvent(QPaintEvent *event)
                 case FieldType::Destination:
                     painter.setBrush(Qt::black);
                 break;
+                case FieldType::Visited:
+                    painter.setBrush(Qt::yellow);
+                break;
             }
             painter.drawRect(rect);
         }

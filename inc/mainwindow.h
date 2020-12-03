@@ -16,6 +16,7 @@
 
 #include "canvas.h"
 #include "searchgrid.h"
+#include "pathfinder.h"
 
 class MainWindow : public QWidget
 {
@@ -40,9 +41,11 @@ private:
     QPushButton *startSearch;
     Canvas* canvas;
     SearchGrid searchGrid;
+    std::shared_ptr<PathFinder> algorithm;
 
 private slots:
     void rowOrColCountChanged();
-    void runAlgorithm();
+    void startAlgorithm();
+    void advanceAlgorithm();
 };
 #endif // MAINWINDOW_H
