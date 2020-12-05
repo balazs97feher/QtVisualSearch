@@ -8,7 +8,7 @@
 #include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48)
+    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48), algoFinished(false)
 {
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
@@ -64,7 +64,10 @@ void MainWindow::resizeEvent(QResizeEvent *event)
 
 void MainWindow::rowOrColCountChanged()
 {
-    canvas->setRowAndColCount(rowCount->text().toUInt(), colCount->text().toUInt());
+    auto rowCnt = rowCount->text().toUInt();
+    auto colCnt = colCount->text().toUInt();
+    searchGrid.setRowAndColCount(rowCnt, colCnt);
+    canvas->setRowAndColSize(rowCnt, colCnt);
 
     update();
 
@@ -80,10 +83,13 @@ void MainWindow::startAlgorithm()
         break;
     }
 
+    if(algoFinished) searchGrid.resetMap();
+    update();
+
     if(algorithm->initialize())
     {
         connect(&timer, &QTimer::timeout, this, &MainWindow::advanceAlgorithm);
-        timer.start(100);
+        timer.start(20);
     }
     else
     {
@@ -108,7 +114,7 @@ void MainWindow::advanceAlgorithm()
 
         path = algorithm->getPath();
         connect(&timer, &QTimer::timeout, this, &MainWindow::drawPath);
-        timer.start(100);
+        timer.start(20);
     }
 }
 
@@ -128,5 +134,6 @@ void MainWindow::drawPath()
         disconnect(&timer, nullptr, nullptr, nullptr);
         path.clear();
         algorithm.reset();
+        algoFinished = true;
     }
 }

@@ -10,10 +10,8 @@ Canvas::Canvas(SearchGrid &searchGrid) : QWidget(nullptr), searchGrid(searchGrid
 
 }
 
-void Canvas::setRowAndColCount(uint rowCount, uint colCount)
+void Canvas::setRowAndColSize(uint rowCount, uint colCount)
 {
-    searchGrid.setRowAndColCount(rowCount, colCount);
-
     rectWidth = float(canvasSize.width())/searchGrid.colCount;
     rectHeight = float(canvasSize.height())/searchGrid.rowCount;
 }
@@ -78,10 +76,10 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 
     if(!dragAndDrawWalls)
     {
-        if(searchGrid.at(clickCoord).type == FieldType::Empty)
-            searchGrid.at(clickCoord).type = FieldType::Wall;
-        else if(searchGrid.at(clickCoord).type == FieldType::Wall)
-            searchGrid.at(clickCoord).type = FieldType::Empty;
+        if(searchGrid.at(clickCoord)->type == FieldType::Empty)
+            searchGrid.at(clickCoord)->type = FieldType::Wall;
+        else if(searchGrid.at(clickCoord)->type == FieldType::Wall)
+            searchGrid.at(clickCoord)->type = FieldType::Empty;
 
         update();
     }
@@ -130,10 +128,10 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
     auto cursorCoord = getCoord(*event);
 
-    auto &field = searchGrid.at(cursorCoord);
-    if(field.type == FieldType::Empty)
+    auto field = searchGrid.at(cursorCoord);
+    if(field->type == FieldType::Empty)
     {
-        field.type = FieldType::Wall;
+        field->type = FieldType::Wall;
         dragAndDrawWalls = true;
     }
 

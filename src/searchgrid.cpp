@@ -53,3 +53,10 @@ Field* SearchGrid::at(const SearchGrid::FieldCoords &coord)
 
     return nullptr;
 }
+
+void SearchGrid::resetMap()
+{
+    for(auto &row : fields)
+        for(auto &field : row)
+            if(field.type == FieldType::Visited || field.type == FieldType::Path) field.type = FieldType::Empty;
+}

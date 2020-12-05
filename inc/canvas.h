@@ -17,7 +17,7 @@ class Canvas : public QWidget
 public:
     explicit Canvas(SearchGrid &searchGrid);
 
-    void setRowAndColCount(uint rowCount, uint colCount);
+    void setRowAndColSize(uint rowCount, uint colCount);
 
 signals:
 

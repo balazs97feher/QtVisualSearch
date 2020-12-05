@@ -45,6 +45,7 @@ private:
     std::shared_ptr<PathFinder> algorithm;
     std::list<Field::Coordinates> path;
     QTimer timer;
+    bool algoFinished;
 
 private slots:
     void rowOrColCountChanged();

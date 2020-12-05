@@ -22,6 +22,7 @@ public:
     void setDest(const FieldCoords &coord);
     void clearDest();
     Field* at(const FieldCoords &coord);
+    void resetMap();
 
 private:
     QVector<QVector<Field>> fields;
