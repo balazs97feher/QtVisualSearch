@@ -26,11 +26,13 @@ protected:
     virtual void resizeEvent(QResizeEvent *event) override;
     virtual void mouseReleaseEvent(QMouseEvent *event) override;
     virtual void mouseDoubleClickEvent(QMouseEvent *event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
     QSize canvasSize;
     float rectWidth, rectHeight;
     SearchGrid &searchGrid;
+    bool dragAndDrawWalls;
 
     FieldCoords getCoord(const QMouseEvent& event) const;
 
