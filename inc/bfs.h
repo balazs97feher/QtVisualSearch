@@ -18,6 +18,7 @@ public:
 
 private:
     using FieldCoords = Field::Coordinates;
+    using FieldType = Field::Type;
 
     FieldCoords currentField;
     uint dirIndex;

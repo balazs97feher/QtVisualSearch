@@ -37,7 +37,7 @@ bool BFS::advance()
     Field *neighbor = nullptr;
     FieldCoords neighborCoords;
 
-    while (!neighbor || neighbor->type != Field::Type::Empty)
+    while (!neighbor || (neighbor->type != FieldType::Empty && neighbor->type != FieldType::Destination))
     {
         if(dirIndex == 4)
         {
@@ -47,7 +47,7 @@ bool BFS::advance()
             dirIndex = 0;
         }
 
-        while((!neighbor || neighbor->type != Field::Type::Empty) && dirIndex < 4)
+        while((!neighbor || (neighbor->type != FieldType::Empty && neighbor->type != FieldType::Destination)) && dirIndex < 4)
         {
             neighborCoords = getNeighborCoords(currentField, PathFinder::directions[dirIndex]);
             neighbor = grid.at(neighborCoords);
@@ -55,7 +55,14 @@ bool BFS::advance()
         }
     }
 
-    neighbor->type = Field::Type::Visited;
+    previousField[neighborCoords.rowNum][neighborCoords.colNum] = grid.at(currentField);
+
+    if(neighbor->type == FieldType::Destination)
+    {
+        if(DEBUG_MSGS_ON) qDebug() << "[BFS] reached destination" << Qt::endl;
+        return false;
+    }
+    neighbor->type = FieldType::Visited;
     fieldsToCheck.push_back(neighborCoords);
 
     static uint visitId = 0;
