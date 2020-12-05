@@ -1,13 +1,11 @@
 #include "bfs.h"
 
+using namespace::std;
+
 BFS::BFS(SearchGrid &grid) : PathFinder(grid), dirIndex(4)
 {
     previousField.resize(grid.rowCount);
-    for(auto &row : previousField)
-    {
-        row.resize(grid.colCount);
-        for(auto &p : row) p = nullptr;
-    }
+    for(auto &row : previousField) row.resize(grid.colCount);
 }
 
 
@@ -55,7 +53,7 @@ bool BFS::advance()
         }
     }
 
-    previousField[neighborCoords.rowNum][neighborCoords.colNum] = grid.at(currentField);
+    previousField[neighborCoords.rowNum][neighborCoords.colNum] = currentField;
 
     if(neighbor->type == FieldType::Destination)
     {
@@ -71,6 +69,16 @@ bool BFS::advance()
     return true;
 }
 
-std::list<Field::Coordinates> BFS::getPath()
+list<BFS::FieldCoords> BFS::getPath()
 {
+    list<FieldCoords> path;
+    auto step = previousField[grid.destCoords.rowNum][grid.destCoords.colNum];
+
+    while(grid.at(step)->type != FieldType::Start)
+    {
+        path.push_front(step);
+        step = previousField[step.rowNum][step.colNum];
+    }
+
+    return path;
 }

@@ -42,10 +42,13 @@ private:
     Canvas* canvas;
     SearchGrid searchGrid;
     std::shared_ptr<PathFinder> algorithm;
+    std::list<Field::Coordinates> path;
+
+    void advanceAlgorithm();
+    void drawPath();
 
 private slots:
     void rowOrColCountChanged();
     void startAlgorithm();
-    void advanceAlgorithm();
 };
 #endif // MAINWINDOW_H

@@ -9,7 +9,8 @@ struct Field
         Wall,
         Start,
         Destination,
-        Visited
+        Visited,
+        Path
     };
     Type type;
 

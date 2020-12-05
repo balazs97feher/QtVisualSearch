@@ -91,4 +91,22 @@ void MainWindow::advanceAlgorithm()
         update();
         QTimer::singleShot(100, this, &MainWindow::advanceAlgorithm);
     }
+    else
+    {
+        path = algorithm->getPath();
+        drawPath();
+    }
+}
+
+void MainWindow::drawPath()
+{
+    if(!path.empty())
+    {
+        auto step = path.front();
+        path.pop_front();
+
+        searchGrid.at(step)->type = Field::Type::Path;
+        update();
+        QTimer::singleShot(100, this, &MainWindow::drawPath);
+    }
 }

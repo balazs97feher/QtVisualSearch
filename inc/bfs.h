@@ -10,20 +10,21 @@
 class BFS: public PathFinder
 {
 public:
+    using FieldCoords = Field::Coordinates;
+    using FieldType = Field::Type;
+
     BFS(SearchGrid &grid);
 
     virtual bool initialize() override;
     virtual bool advance() override;
-    virtual std::list<Field::Coordinates> getPath() override;
+    virtual std::list<FieldCoords> getPath() override;
 
 private:
-    using FieldCoords = Field::Coordinates;
-    using FieldType = Field::Type;
 
     FieldCoords currentField;
     uint dirIndex;
     std::list<FieldCoords> fieldsToCheck;
-    QVector<QVector<Field*>> previousField;
+    QVector<QVector<FieldCoords>> previousField;
 };
 
 #endif // BFS_H
