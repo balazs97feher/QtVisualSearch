@@ -22,8 +22,9 @@ void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
 
 void SearchGrid::setStart(const SearchGrid::FieldCoords &coord)
 {
-    startField = &at(coord);
-    at(coord).type = FieldType::Start;
+    startField = at(coord);
+    at(coord)->type = FieldType::Start;
+    startCoords = coord;
 }
 
 void SearchGrid::clearStart()
@@ -34,8 +35,9 @@ void SearchGrid::clearStart()
 
 void SearchGrid::setDest(const SearchGrid::FieldCoords &coord)
 {
-    destField = &at(coord);
-    at(coord).type = FieldType::Destination;
+    destField = at(coord);
+    at(coord)->type = FieldType::Destination;
+    destCoords = coord;
 }
 
 void SearchGrid::clearDest()
@@ -44,7 +46,10 @@ void SearchGrid::clearDest()
     destField = nullptr;
 }
 
-Field& SearchGrid::at(const SearchGrid::FieldCoords &coord)
+Field* SearchGrid::at(const SearchGrid::FieldCoords &coord)
 {
-    return fields[coord.rowNum][coord.colNum];
+    if(coord.rowNum >= 0 && coord.colNum >= 0 && coord.colNum < colCount && coord.rowNum < rowCount)
+        return &fields[coord.rowNum][coord.colNum];
+
+    return nullptr;
 }

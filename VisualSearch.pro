@@ -2,7 +2,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++14
+CONFIG += c++17
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -12,16 +12,19 @@ INCLUDEPATH += \
     inc/
 
 SOURCES += \
+    src/bfs.cpp \
     src/searchgrid.cpp \
     src/canvas.cpp \
     src/main.cpp \
     src/mainwindow.cpp
 
 HEADERS += \
+    inc/bfs.h \
     inc/canvas.h \
     inc/debug.h \
     inc/field.h \
     inc/mainwindow.h \
+    inc/pathfinder.h \
     inc/searchgrid.h
 
 # Default rules for deployment.

@@ -5,10 +5,12 @@
 #include <QVector>
 
 class Canvas;
+class BFS;
 
 class SearchGrid
 {
     friend class Canvas;
+    friend class BFS;
     using FieldType = Field::Type;
     using FieldCoords = Field::Coordinates;
 
@@ -19,13 +21,14 @@ public:
     void clearStart();
     void setDest(const FieldCoords &coord);
     void clearDest();
-    Field& at(const FieldCoords &coord);
+    Field* at(const FieldCoords &coord);
 
 private:
     QVector<QVector<Field>> fields;
     uint rowCount, colCount;
 
     Field *startField, *destField;
+    FieldCoords startCoords, destCoords;
 };
 
 #endif // SEARCHGRID_H

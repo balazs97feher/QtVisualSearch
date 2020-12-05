@@ -8,7 +8,9 @@ struct Field
         Empty,
         Wall,
         Start,
-        Destination
+        Destination,
+        Visited,
+        Path
     };
     Type type;
 

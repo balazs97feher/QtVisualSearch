@@ -5,7 +5,7 @@
 #include <QRectF>
 #include <QPaintEvent>
 
-Canvas::Canvas(QWidget *parent) : QWidget(parent), searchGrid(9, 16), dragAndDrawWalls(false)
+Canvas::Canvas(SearchGrid &searchGrid) : QWidget(nullptr), searchGrid(searchGrid), dragAndDrawWalls(false)
 {
 
 }
@@ -45,6 +45,12 @@ void Canvas::paintEvent(QPaintEvent *event)
                 break;
                 case FieldType::Destination:
                     painter.setBrush(Qt::black);
+                break;
+                case FieldType::Visited:
+                    painter.setBrush(Qt::yellow);
+                break;
+                case FieldType::Path:
+                    painter.setBrush(Qt::white);
                 break;
             }
             painter.drawRect(rect);
