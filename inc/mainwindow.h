@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QIntValidator>
 #include <QComboBox>
+#include <QTimer>
 #include <memory>
 
 #include "canvas.h"
@@ -43,12 +44,12 @@ private:
     SearchGrid searchGrid;
     std::shared_ptr<PathFinder> algorithm;
     std::list<Field::Coordinates> path;
-
-    void advanceAlgorithm();
-    void drawPath();
+    QTimer timer;
 
 private slots:
     void rowOrColCountChanged();
     void startAlgorithm();
+    void advanceAlgorithm();
+    void drawPath();
 };
 #endif // MAINWINDOW_H

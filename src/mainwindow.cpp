@@ -4,6 +4,7 @@
 #include <QPaintEvent>
 #include <QPen>
 #include <QTimer>
+#include <QMessageBox>
 #include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -79,9 +80,19 @@ void MainWindow::startAlgorithm()
         break;
     }
 
-    algorithm->initialize();
-    QTimer::singleShot(100, this, &MainWindow::advanceAlgorithm);
-
+    if(algorithm->initialize())
+    {
+        connect(&timer, &QTimer::timeout, this, &MainWindow::advanceAlgorithm);
+        timer.start(100);
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Please set a start and a destination field.");
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.exec();
+    }
 }
 
 void MainWindow::advanceAlgorithm()
@@ -89,12 +100,15 @@ void MainWindow::advanceAlgorithm()
     if(algorithm->advance())
     {
         update();
-        QTimer::singleShot(100, this, &MainWindow::advanceAlgorithm);
     }
     else
     {
+        timer.stop();
+        disconnect(&timer, nullptr, nullptr, nullptr);
+
         path = algorithm->getPath();
-        drawPath();
+        connect(&timer, &QTimer::timeout, this, &MainWindow::drawPath);
+        timer.start(100);
     }
 }
 
@@ -107,6 +121,12 @@ void MainWindow::drawPath()
 
         searchGrid.at(step)->type = Field::Type::Path;
         update();
-        QTimer::singleShot(100, this, &MainWindow::drawPath);
+    }
+    else
+    {
+        timer.stop();
+        disconnect(&timer, nullptr, nullptr, nullptr);
+        path.clear();
+        algorithm.reset();
     }
 }
