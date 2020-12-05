@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QRectF>
 #include <QPaintEvent>
+#include <algorithm>
 
 Canvas::Canvas(SearchGrid &searchGrid) : QWidget(nullptr), searchGrid(searchGrid), dragAndDrawWalls(false)
 {
@@ -115,8 +116,8 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 Canvas::FieldCoords Canvas::getCoord(const QMouseEvent &event) const
 {
     FieldCoords coord;
-    coord.rowNum = uint(event.localPos().y() / rectHeight);
-    coord.colNum = uint(event.localPos().x() / rectWidth);
+    coord.rowNum = std::max(0.0, std::min(double(searchGrid.rowCount - 1), event.localPos().y() / rectHeight));
+    coord.colNum = std::max(0.0, std::min(double(searchGrid.colCount - 1), event.localPos().x() / rectWidth));
 
     return coord;
 }
