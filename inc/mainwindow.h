@@ -13,7 +13,9 @@
 #include <QIntValidator>
 #include <QComboBox>
 #include <QTimer>
+#include <QSlider>
 #include <memory>
+#include <chrono>
 
 #include "canvas.h"
 #include "searchgrid.h"
@@ -45,6 +47,9 @@ private:
     std::shared_ptr<PathFinder> algorithm;
     std::list<Field::Coordinates> path;
     QTimer timer;
+    std::chrono::milliseconds stepInterval;
+    QSlider *slider;
+
     bool algoFinished;
 
 private slots:
@@ -52,5 +57,6 @@ private slots:
     void startAlgorithm();
     void advanceAlgorithm();
     void drawPath();
+    void setStepInterval();
 };
 #endif // MAINWINDOW_H

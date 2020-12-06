@@ -8,7 +8,7 @@
 #include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48), algoFinished(false)
+    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48), stepInterval(100), algoFinished(false)
 {
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
@@ -37,14 +37,23 @@ MainWindow::MainWindow(QWidget *parent)
     startSearch = new QPushButton("Start");
     startSearch->setFixedSize(60, 25);
 
+    slider = new QSlider(Qt::Orientation::Horizontal);
+    slider->setFixedSize(120, 25);
+    slider->setTickInterval(10);
+    slider->setMinimum(0);
+    slider->setMaximum(190);
+    slider->setValue(200 - stepInterval.count());
+
     controlArea->addWidget(colCount);
     controlArea->addWidget(rowCount);
     controlArea->addWidget(setRowAndColCount);
     controlArea->addWidget(algorithmList);
     controlArea->addWidget(startSearch);
+    controlArea->addWidget(slider);
 
-    QObject::connect(setRowAndColCount, &QPushButton::clicked, this, &MainWindow::rowOrColCountChanged);
-    QObject::connect(startSearch, &QPushButton::clicked, this, &MainWindow::startAlgorithm);
+    connect(setRowAndColCount, &QPushButton::clicked, this, &MainWindow::rowOrColCountChanged);
+    connect(startSearch, &QPushButton::clicked, this, &MainWindow::startAlgorithm);
+    connect(slider, &QSlider::valueChanged, this, &MainWindow::setStepInterval);
 
     setLayout(verticalLayout.get());
 }
@@ -89,7 +98,7 @@ void MainWindow::startAlgorithm()
     if(algorithm->initialize())
     {
         connect(&timer, &QTimer::timeout, this, &MainWindow::advanceAlgorithm);
-        timer.start(20);
+        timer.start(stepInterval);
     }
     else
     {
@@ -114,7 +123,7 @@ void MainWindow::advanceAlgorithm()
 
         path = algorithm->getPath();
         connect(&timer, &QTimer::timeout, this, &MainWindow::drawPath);
-        timer.start(20);
+        timer.start(stepInterval);
     }
 }
 
@@ -136,4 +145,10 @@ void MainWindow::drawPath()
         algorithm.reset();
         algoFinished = true;
     }
+}
+
+void MainWindow::setStepInterval()
+{
+    stepInterval = std::chrono::milliseconds(200 - slider->value());
+    if(timer.isActive()) timer.start(stepInterval);
 }
