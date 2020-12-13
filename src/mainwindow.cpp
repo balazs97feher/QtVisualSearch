@@ -18,6 +18,11 @@ MainWindow::MainWindow(QWidget *parent)
     canvas = new Canvas(searchGrid);
     verticalLayout->addWidget(canvas);
 
+    tilingList = new QComboBox();
+    tilingList->setFixedSize(100, 25);
+    tilingList->addItem("Square tiling");
+    tilingList->addItem("Hexagon tiling");
+
     rowCount = new QLineEdit("27");
     colCount = new QLineEdit("48");
     rowCount->setFixedSize(30, 25);
@@ -44,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     slider->setMaximum(190);
     slider->setValue(200 - stepInterval.count());
 
+    controlArea->addWidget(tilingList);
     controlArea->addWidget(colCount);
     controlArea->addWidget(rowCount);
     controlArea->addWidget(setRowAndColCount);

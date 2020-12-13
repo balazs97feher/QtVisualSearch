@@ -36,6 +36,7 @@ private:
     QSize windowSize;
     std::unique_ptr<QVBoxLayout> verticalLayout;
     QHBoxLayout *controlArea;
+    QComboBox *tilingList;
     QLineEdit *colCount;
     QLineEdit *rowCount;
     std::unique_ptr<QIntValidator> intValidator;
