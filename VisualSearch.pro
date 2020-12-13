@@ -26,6 +26,7 @@ HEADERS += \
     inc/mainwindow.h \
     inc/pathfinder.h \
     inc/searchgrid.h \
+    inc/square.h \
     inc/tile.h
 
 # Default rules for deployment.

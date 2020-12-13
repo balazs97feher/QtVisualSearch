@@ -5,6 +5,8 @@
 
 class Tile
 {
+public:
+
     enum class Type
     {
         Empty,
