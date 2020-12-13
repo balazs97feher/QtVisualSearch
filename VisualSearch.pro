@@ -25,7 +25,8 @@ HEADERS += \
     inc/field.h \
     inc/mainwindow.h \
     inc/pathfinder.h \
-    inc/searchgrid.h
+    inc/searchgrid.h \
+    inc/tile.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
