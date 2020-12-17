@@ -1,10 +1,10 @@
-#ifndef SQUARE_H
-#define SQUARE_H
+#ifndef RECTANGLE_H
+#define RECTANGLE_H
 
 #include "debug.h"
 #include "tile.h"
 
-class Square final : public Tile
+class Rectangle final : public Tile
 {
 public:
 
@@ -24,7 +24,7 @@ public:
                 coords.colNum--;
                 break;
             default:
-                if(DEBUG_MSGS_ON) qDebug() << "[Square] invalid direction passed as function argument" << Qt::endl;
+                if(DEBUG_MSGS_ON) qDebug() << "[Rectangle] invalid direction passed as function argument" << Qt::endl;
                 break;
         }
 
@@ -37,4 +37,4 @@ public:
     }
 };
 
-#endif // SQUARE_H
+#endif // RECTANGLE_H

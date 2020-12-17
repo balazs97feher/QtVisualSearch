@@ -18,7 +18,7 @@ class SearchGrid
 public:
     enum class Tiling
     {
-        Square,
+        Rectangle,
         Hexagon
     };
 

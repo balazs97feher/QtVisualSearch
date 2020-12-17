@@ -24,8 +24,8 @@ HEADERS += \
     inc/debug.h \
     inc/mainwindow.h \
     inc/pathfinder.h \
+    inc/rectangle.h \
     inc/searchgrid.h \
-    inc/square.h \
     inc/tile.h
 
 # Default rules for deployment.

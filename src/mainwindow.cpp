@@ -8,7 +8,7 @@
 #include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48, SearchGrid::Tiling::Square), stepInterval(100), algoFinished(false)
+    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48, SearchGrid::Tiling::Rectangle), stepInterval(100), algoFinished(false)
 {
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     tilingList = new QComboBox();
     tilingList->setFixedSize(100, 25);
-    tilingList->addItem("Square tiling");
+    tilingList->addItem("Rectangle tiling");
     tilingList->addItem("Hexagon tiling");
 
     rowCount = new QLineEdit("27");

@@ -1,5 +1,5 @@
 #include "searchgrid.h"
-#include "square.h"
+#include "rectangle.h"
 
 SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Tiling shape) :
     shape(shape), rowCount(rowCount), colCount(colCount), startTile(nullptr), destTile(nullptr)
@@ -10,8 +10,8 @@ SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Tiling sh
         row.reserve(colCount);
         for(uint i = 0; i < colCount; i++){
             switch (shape) {
-                case Tiling::Square:
-                    row.append(std::make_shared<Square>());
+                case Tiling::Rectangle:
+                    row.append(std::make_shared<Rectangle>());
                     break;
                 default:
                     if(DEBUG_MSGS_ON) qDebug() << "[SearchGrid] this shape is not yet implemented." << Qt::endl;
@@ -35,8 +35,8 @@ void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
         row.reserve(colCount);
         for(uint i = 0; i < colCount; i++){
             switch (shape) {
-                case Tiling::Square:
-                    row.append(std::make_shared<Square>());
+                case Tiling::Rectangle:
+                    row.append(std::make_shared<Rectangle>());
                     break;
                 default:
                     if(DEBUG_MSGS_ON) qDebug() << "[SearchGrid] this shape is not yet implemented." << Qt::endl;
