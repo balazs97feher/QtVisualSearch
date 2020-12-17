@@ -18,7 +18,7 @@ public:
 protected:
     SearchGrid &grid;
     QVector<Tile::Direction> directions;
-    int directionCount;
+    uint directionCount;
 };
 
 #endif // PATHFINDER_H

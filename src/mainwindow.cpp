@@ -8,7 +8,7 @@
 #include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48, SearchGrid::Shape::Square), stepInterval(100), algoFinished(false)
+    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48, SearchGrid::Tiling::Square), stepInterval(100), algoFinished(false)
 {
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
@@ -124,6 +124,7 @@ void MainWindow::advanceAlgorithm()
     }
     else
     {
+        if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] algorithm finished" << Qt::endl;
         timer.stop();
         disconnect(&timer, nullptr, nullptr, nullptr);
 

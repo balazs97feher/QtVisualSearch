@@ -16,13 +16,13 @@ class SearchGrid
     using TileCoords = Tile::Coordinates;
 
 public:
-    enum class Shape
+    enum class Tiling
     {
         Square,
         Hexagon
     };
 
-    SearchGrid(const uint rowCount, const uint colCount, const Shape shape);
+    SearchGrid(const uint rowCount, const uint colCount, const Tiling shape);
     void setRowAndColCount(const uint rowCount, const uint colCount);
     void setStart(const TileCoords &coord);
     void clearStart();
@@ -32,7 +32,7 @@ public:
     void resetMap();
 
 private:
-    const Shape shape;
+    const Tiling shape;
     QVector<QVector<std::shared_ptr<Tile>>> tiles;
     uint rowCount, colCount;
 

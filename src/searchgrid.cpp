@@ -1,7 +1,7 @@
 #include "searchgrid.h"
 #include "square.h"
 
-SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Shape shape) :
+SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Tiling shape) :
     shape(shape), rowCount(rowCount), colCount(colCount), startTile(nullptr), destTile(nullptr)
 {
     tiles.resize(rowCount);
@@ -10,7 +10,7 @@ SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Shape sha
         row.reserve(colCount);
         for(uint i = 0; i < colCount; i++){
             switch (shape) {
-                case Shape::Square:
+                case Tiling::Square:
                     row.append(std::make_shared<Square>());
                     break;
                 default:
@@ -22,8 +22,8 @@ SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Shape sha
 
 void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
 {
-    startTile = nullptr;
-    destTile = nullptr;
+    startTile.reset();
+    destTile.reset();
 
     this->rowCount = rowCount;
     this->colCount = colCount;
@@ -35,7 +35,7 @@ void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
         row.reserve(colCount);
         for(uint i = 0; i < colCount; i++){
             switch (shape) {
-                case Shape::Square:
+                case Tiling::Square:
                     row.append(std::make_shared<Square>());
                     break;
                 default:
@@ -48,7 +48,7 @@ void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
 void SearchGrid::setStart(const SearchGrid::TileCoords &coord)
 {
     startTile = at(coord);
-    at(coord)->type = TileType::Start;
+    startTile->type = TileType::Start;
     startCoords = coord;
 }
 
@@ -61,7 +61,7 @@ void SearchGrid::clearStart()
 void SearchGrid::setDest(const SearchGrid::TileCoords &coord)
 {
     destTile = at(coord);
-    at(coord)->type = TileType::Destination;
+    destTile->type = TileType::Destination;
     destCoords = coord;
 }
 

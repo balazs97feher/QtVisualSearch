@@ -2,7 +2,7 @@
 
 using namespace::std;
 
-BFS::BFS(SearchGrid &grid) : PathFinder(grid)
+BFS::BFS(SearchGrid &grid) : PathFinder(grid), dirIndex(0)
 {
     previousTile.resize(grid.rowCount);
     for(auto &row : previousTile) row.resize(grid.colCount);
@@ -35,7 +35,7 @@ bool BFS::advance()
 
     if(tilesToCheck.empty() && dirIndex == directionCount) return false;
 
-    std::shared_ptr<Tile> neighbor = nullptr;
+    std::shared_ptr<Tile> neighbor;
     TileCoords neighborCoords;
 
     while (!neighbor || (neighbor->type != TileType::Empty && neighbor->type != TileType::Destination))
