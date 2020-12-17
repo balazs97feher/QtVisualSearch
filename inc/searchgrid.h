@@ -1,8 +1,9 @@
 #ifndef SEARCHGRID_H
 #define SEARCHGRID_H
 
-#include "field.h"
+#include "tile.h"
 #include <QVector>
+#include <memory>
 
 class Canvas;
 class BFS;
@@ -11,25 +12,32 @@ class SearchGrid
 {
     friend class Canvas;
     friend class BFS;
-    using FieldType = Field::Type;
-    using FieldCoords = Field::Coordinates;
+    using TileType = Tile::Type;
+    using TileCoords = Tile::Coordinates;
 
 public:
-    SearchGrid(uint rowCount, uint colCount);
-    void setRowAndColCount(uint rowCount, uint colCount);
-    void setStart(const FieldCoords &coord);
+    enum class Shape
+    {
+        Square,
+        Hexagon
+    };
+
+    SearchGrid(const uint rowCount, const uint colCount, const Shape shape);
+    void setRowAndColCount(const uint rowCount, const uint colCount);
+    void setStart(const TileCoords &coord);
     void clearStart();
-    void setDest(const FieldCoords &coord);
+    void setDest(const TileCoords &coord);
     void clearDest();
-    Field* at(const FieldCoords &coord);
+    std::shared_ptr<Tile> at(const TileCoords &coord);
     void resetMap();
 
 private:
-    QVector<QVector<Field>> fields;
+    const Shape shape;
+    QVector<QVector<std::shared_ptr<Tile>>> tiles;
     uint rowCount, colCount;
 
-    Field *startField, *destField;
-    FieldCoords startCoords, destCoords;
+    std::shared_ptr<Tile> startTile, destTile;
+    TileCoords startCoords, destCoords;
 };
 
 #endif // SEARCHGRID_H

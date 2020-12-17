@@ -11,8 +11,8 @@ class Canvas : public QWidget
 {
     Q_OBJECT
 
-    using FieldType = Field::Type;
-    using FieldCoords = Field::Coordinates;
+    using TileType = Tile::Type;
+    using TileCoords = Tile::Coordinates;
 
 public:
     explicit Canvas(SearchGrid &searchGrid);
@@ -34,7 +34,7 @@ private:
     SearchGrid &searchGrid;
     bool dragAndDrawWalls;
 
-    FieldCoords getCoord(const QMouseEvent& event) const;
+    TileCoords getCoord(const QMouseEvent& event) const;
 
 };
 

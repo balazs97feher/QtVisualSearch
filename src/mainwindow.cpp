@@ -8,7 +8,7 @@
 #include "bfs.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48), stepInterval(100), algoFinished(false)
+    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48, SearchGrid::Shape::Square), stepInterval(100), algoFinished(false)
 {
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
@@ -109,7 +109,7 @@ void MainWindow::startAlgorithm()
     else
     {
         QMessageBox msgBox;
-        msgBox.setText("Please set a start and a destination field.");
+        msgBox.setText("Please set a start and a destination tile.");
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setIcon(QMessageBox::Warning);
         msgBox.exec();
@@ -140,7 +140,7 @@ void MainWindow::drawPath()
         auto step = path.front();
         path.pop_front();
 
-        searchGrid.at(step)->type = Field::Type::Path;
+        searchGrid.at(step)->type = Tile::Type::Path;
         update();
     }
     else

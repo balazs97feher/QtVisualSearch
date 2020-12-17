@@ -22,7 +22,6 @@ HEADERS += \
     inc/bfs.h \
     inc/canvas.h \
     inc/debug.h \
-    inc/field.h \
     inc/mainwindow.h \
     inc/pathfinder.h \
     inc/searchgrid.h \

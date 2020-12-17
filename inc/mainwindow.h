@@ -46,7 +46,7 @@ private:
     Canvas* canvas;
     SearchGrid searchGrid;
     std::shared_ptr<PathFinder> algorithm;
-    std::list<Field::Coordinates> path;
+    std::list<Tile::Coordinates> path;
     QTimer timer;
     std::chrono::milliseconds stepInterval;
     QSlider *slider;

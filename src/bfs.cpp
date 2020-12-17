@@ -2,20 +2,23 @@
 
 using namespace::std;
 
-BFS::BFS(SearchGrid &grid) : PathFinder(grid), dirIndex(4)
+BFS::BFS(SearchGrid &grid) : PathFinder(grid)
 {
-    previousField.resize(grid.rowCount);
-    for(auto &row : previousField) row.resize(grid.colCount);
+    previousTile.resize(grid.rowCount);
+    for(auto &row : previousTile) row.resize(grid.colCount);
+
+    directions = grid.tiles[0][0]->getDirections();
+    directionCount = directions.size();
 }
 
 
 bool BFS::initialize()
 {
-    if(grid.startField && grid.destField)
+    if(grid.startTile && grid.destTile)
     {
         qDebug() << "[BFS] initialzed" << Qt::endl;
 
-        fieldsToCheck.push_back(grid.startCoords);
+        tilesToCheck.push_back(grid.startCoords);
         return true;
     }
     else
@@ -30,38 +33,38 @@ bool BFS::advance()
     static uint callId = 0;
     if(DEBUG_MSGS_ON) qDebug() << "[BFS] advance called " << callId++ << Qt::endl;
 
-    if(fieldsToCheck.empty() && dirIndex == 4) return false;
+    if(tilesToCheck.empty() && dirIndex == directionCount) return false;
 
-    Field *neighbor = nullptr;
-    FieldCoords neighborCoords;
+    std::shared_ptr<Tile> neighbor = nullptr;
+    TileCoords neighborCoords;
 
-    while (!neighbor || (neighbor->type != FieldType::Empty && neighbor->type != FieldType::Destination))
+    while (!neighbor || (neighbor->type != TileType::Empty && neighbor->type != TileType::Destination))
     {
-        if(dirIndex == 4)
+        if(dirIndex == directionCount)
         {
-            if(fieldsToCheck.empty()) return false;
-            currentField = fieldsToCheck.front();
-            fieldsToCheck.pop_front();
+            if(tilesToCheck.empty()) return false;
+            currentTile = tilesToCheck.front();
+            tilesToCheck.pop_front();
             dirIndex = 0;
         }
 
-        while((!neighbor || (neighbor->type != FieldType::Empty && neighbor->type != FieldType::Destination)) && dirIndex < 4)
+        while((!neighbor || (neighbor->type != TileType::Empty && neighbor->type != TileType::Destination)) && dirIndex < 4)
         {
-            neighborCoords = getNeighborCoords(currentField, PathFinder::directions[dirIndex]);
+            neighborCoords = grid.tiles[0][0]->getNeighborCoords(currentTile, PathFinder::directions[dirIndex]);
             neighbor = grid.at(neighborCoords);
             dirIndex++;
         }
     }
 
-    previousField[neighborCoords.rowNum][neighborCoords.colNum] = currentField;
+    previousTile[neighborCoords.rowNum][neighborCoords.colNum] = currentTile;
 
-    if(neighbor->type == FieldType::Destination)
+    if(neighbor->type == TileType::Destination)
     {
         if(DEBUG_MSGS_ON) qDebug() << "[BFS] reached destination" << Qt::endl;
         return false;
     }
-    neighbor->type = FieldType::Visited;
-    fieldsToCheck.push_back(neighborCoords);
+    neighbor->type = TileType::Visited;
+    tilesToCheck.push_back(neighborCoords);
 
     static uint visitId = 0;
     if(DEBUG_MSGS_ON) qDebug() << "[BFS] visited new neighbor " << visitId++ << Qt::endl;
@@ -69,15 +72,15 @@ bool BFS::advance()
     return true;
 }
 
-list<BFS::FieldCoords> BFS::getPath()
+list<BFS::TileCoords> BFS::getPath()
 {
-    list<FieldCoords> path;
-    auto step = previousField[grid.destCoords.rowNum][grid.destCoords.colNum];
+    list<TileCoords> path;
+    auto step = previousTile[grid.destCoords.rowNum][grid.destCoords.colNum];
 
-    while(grid.at(step)->type != FieldType::Start)
+    while(grid.at(step)->type != TileType::Start)
     {
         path.push_front(step);
-        step = previousField[step.rowNum][step.colNum];
+        step = previousTile[step.rowNum][step.colNum];
     }
 
     return path;

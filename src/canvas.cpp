@@ -32,23 +32,23 @@ void Canvas::paintEvent(QPaintEvent *event)
     {
         for(uint j = 0; j < searchGrid.colCount; j++){
             QRectF rect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
-            switch (searchGrid.fields[i][j].type) {
-                case FieldType::Empty:
+            switch (searchGrid.tiles[i][j]->type) {
+                case TileType::Empty:
                     painter.setBrush(Qt::green);
                 break;
-                case FieldType::Wall:
+                case TileType::Wall:
                     painter.setBrush(Qt::red);
                 break;
-                case FieldType::Start:
+                case TileType::Start:
                     painter.setBrush(Qt::blue);
                 break;
-                case FieldType::Destination:
+                case TileType::Destination:
                     painter.setBrush(Qt::black);
                 break;
-                case FieldType::Visited:
+                case TileType::Visited:
                     painter.setBrush(Qt::yellow);
                 break;
-                case FieldType::Path:
+                case TileType::Path:
                     painter.setBrush(Qt::white);
                 break;
             }
@@ -77,10 +77,10 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 
     if(!dragAndDrawWalls)
     {
-        if(searchGrid.at(clickCoord)->type == FieldType::Empty)
-            searchGrid.at(clickCoord)->type = FieldType::Wall;
-        else if(searchGrid.at(clickCoord)->type == FieldType::Wall)
-            searchGrid.at(clickCoord)->type = FieldType::Empty;
+        if(searchGrid.at(clickCoord)->type == TileType::Empty)
+            searchGrid.at(clickCoord)->type = TileType::Wall;
+        else if(searchGrid.at(clickCoord)->type == TileType::Wall)
+            searchGrid.at(clickCoord)->type = TileType::Empty;
 
         update();
     }
@@ -94,11 +94,11 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 {
     auto clickCoord = getCoord(*event);
 
-    if(!searchGrid.startField)
+    if(!searchGrid.startTile)
     {
         searchGrid.setStart(clickCoord);
     }
-    else if(!searchGrid.destField)
+    else if(!searchGrid.destTile)
     {
         searchGrid.setDest(clickCoord);
     }
@@ -113,9 +113,9 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
     if(DEBUG_MSGS_ON) qDebug() << "[Canvas] double click " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
 
-Canvas::FieldCoords Canvas::getCoord(const QMouseEvent &event) const
+Canvas::TileCoords Canvas::getCoord(const QMouseEvent &event) const
 {
-    FieldCoords coord;
+    TileCoords coord;
     coord.rowNum = std::max(0.0, std::min(double(searchGrid.rowCount - 1), event.localPos().y() / rectHeight));
     coord.colNum = std::max(0.0, std::min(double(searchGrid.colCount - 1), event.localPos().x() / rectWidth));
 
@@ -129,10 +129,10 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
     auto cursorCoord = getCoord(*event);
 
-    auto field = searchGrid.at(cursorCoord);
-    if(field->type == FieldType::Empty)
+    auto tile = searchGrid.at(cursorCoord);
+    if(tile->type == TileType::Empty)
     {
-        field->type = FieldType::Wall;
+        tile->type = TileType::Wall;
         dragAndDrawWalls = true;
     }
 

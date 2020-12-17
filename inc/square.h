@@ -4,7 +4,6 @@
 #include "debug.h"
 #include "tile.h"
 
-
 class Square final : public Tile
 {
 public:
@@ -25,7 +24,7 @@ public:
                 coords.colNum--;
                 break;
             default:
-                qDebug() << "[Square] invalid direction passed as function argument" << Qt::endl;
+                if(DEBUG_MSGS_ON) qDebug() << "[Square] invalid direction passed as function argument" << Qt::endl;
                 break;
         }
 

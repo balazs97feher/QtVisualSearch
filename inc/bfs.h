@@ -7,24 +7,24 @@
 #include <list>
 #include <QVector>
 
-class BFS: public PathFinder
+class BFS final : public PathFinder
 {
 public:
-    using FieldCoords = Field::Coordinates;
-    using FieldType = Field::Type;
+    using TileCoords = Tile::Coordinates;
+    using TileType = Tile::Type;
 
     BFS(SearchGrid &grid);
 
     virtual bool initialize() override;
     virtual bool advance() override;
-    virtual std::list<FieldCoords> getPath() override;
+    virtual std::list<TileCoords> getPath() override;
 
 private:
 
-    FieldCoords currentField;
+    TileCoords currentTile;
     uint dirIndex;
-    std::list<FieldCoords> fieldsToCheck;
-    QVector<QVector<FieldCoords>> previousField;
+    std::list<TileCoords> tilesToCheck;
+    QVector<QVector<TileCoords>> previousTile;
 };
 
 #endif // BFS_H
