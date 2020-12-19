@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QSize>
 #include <QVector>
+#include <QHash>
 
 class Canvas : public QWidget
 {
@@ -33,6 +34,7 @@ private:
     float rectWidth, rectHeight;
     SearchGrid &searchGrid;
     bool dragAndDrawWalls;
+    QHash<Tile::Type, QColor> colors;
 
     TileCoords getCoord(const QMouseEvent& event) const;
 

@@ -7,7 +7,7 @@ class Tile
 {
 public:
 
-    enum class Type
+    enum Type
     {
         Empty,
         Wall,

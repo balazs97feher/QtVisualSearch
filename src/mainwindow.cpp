@@ -118,10 +118,7 @@ void MainWindow::startAlgorithm()
 
 void MainWindow::advanceAlgorithm()
 {
-    if(algorithm->advance())
-    {
-        update();
-    }
+    if(algorithm->advance()) update();
     else
     {
         if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] algorithm finished" << Qt::endl;

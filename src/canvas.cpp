@@ -8,7 +8,14 @@
 
 Canvas::Canvas(SearchGrid &searchGrid) : QWidget(nullptr), searchGrid(searchGrid), dragAndDrawWalls(false)
 {
-
+    colors = {
+        {TileType::Empty, QColor(0, 255, 0)},
+        {TileType::Wall, QColor(255, 0, 0)},
+        {TileType::Start, QColor(0, 0, 255)},
+        {TileType::Destination, QColor(0, 0, 0)},
+        {TileType::Visited, QColor(255, 255, 0)},
+        {TileType::Path, QColor(255, 255, 255)}
+    };
 }
 
 void Canvas::setRowAndColSize(uint rowCount, uint colCount)
@@ -32,26 +39,7 @@ void Canvas::paintEvent(QPaintEvent *event)
     {
         for(uint j = 0; j < searchGrid.colCount; j++){
             QRectF rect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
-            switch (searchGrid.tiles[i][j]->type) {
-                case TileType::Empty:
-                    painter.setBrush(Qt::green);
-                break;
-                case TileType::Wall:
-                    painter.setBrush(Qt::red);
-                break;
-                case TileType::Start:
-                    painter.setBrush(Qt::blue);
-                break;
-                case TileType::Destination:
-                    painter.setBrush(Qt::black);
-                break;
-                case TileType::Visited:
-                    painter.setBrush(Qt::yellow);
-                break;
-                case TileType::Path:
-                    painter.setBrush(Qt::white);
-                break;
-            }
+            painter.setBrush(colors[searchGrid.tiles[i][j]->type]);
             painter.drawRect(rect);
         }
     }
