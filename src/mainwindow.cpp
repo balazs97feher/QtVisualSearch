@@ -82,7 +82,6 @@ void MainWindow::rowOrColCountChanged()
     auto rowCnt = rowCount->text().toUInt();
     auto colCnt = colCount->text().toUInt();
     searchGrid.setRowAndColCount(rowCnt, colCnt);
-    canvas->setRowAndColSize(rowCnt, colCnt);
 
     update();
 

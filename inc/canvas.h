@@ -18,10 +18,6 @@ class Canvas : public QWidget
 public:
     explicit Canvas(SearchGrid &searchGrid);
 
-    void setRowAndColSize(uint rowCount, uint colCount);
-
-signals:
-
 protected:
     virtual void paintEvent(QPaintEvent *event) override;
     virtual void resizeEvent(QResizeEvent *event) override;
@@ -31,7 +27,6 @@ protected:
 
 private:
     QSize canvasSize;
-    float rectWidth, rectHeight;
     SearchGrid &searchGrid;
     bool dragAndDrawWalls;
     QHash<Tile::Type, QColor> colors;

@@ -18,16 +18,12 @@ Canvas::Canvas(SearchGrid &searchGrid) : QWidget(nullptr), searchGrid(searchGrid
     };
 }
 
-void Canvas::setRowAndColSize(uint rowCount, uint colCount)
-{
-    rectWidth = float(canvasSize.width())/searchGrid.colCount;
-    rectHeight = float(canvasSize.height())/searchGrid.rowCount;
-}
-
-
 void Canvas::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
+
+    float rectWidth = float(canvasSize.width())/searchGrid.colCount;
+    float rectHeight = float(canvasSize.height())/searchGrid.rowCount;
 
     QPainter painter(this);
     QPen pen;
@@ -52,8 +48,6 @@ void Canvas::paintEvent(QPaintEvent *event)
 void Canvas::resizeEvent(QResizeEvent *event)
 {
     canvasSize = event->size();
-    rectWidth = float(canvasSize.width())/searchGrid.colCount;
-    rectHeight = float(canvasSize.height())/searchGrid.rowCount;
 
     if(DEBUG_MSGS_ON) qDebug() << "[Canvas] resize " << canvasSize.width() << '/' << canvasSize.height() << Qt::endl;
 }
@@ -82,14 +76,8 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 {
     auto clickCoord = getCoord(*event);
 
-    if(!searchGrid.startTile)
-    {
-        searchGrid.setStart(clickCoord);
-    }
-    else if(!searchGrid.destTile)
-    {
-        searchGrid.setDest(clickCoord);
-    }
+    if(!searchGrid.startTile) searchGrid.setStart(clickCoord);
+    else if(!searchGrid.destTile) searchGrid.setDest(clickCoord);
     else
     {
         searchGrid.clearStart();
@@ -103,6 +91,9 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 
 Canvas::TileCoords Canvas::getCoord(const QMouseEvent &event) const
 {
+    float rectWidth = float(canvasSize.width())/searchGrid.colCount;
+    float rectHeight = float(canvasSize.height())/searchGrid.rowCount;
+
     TileCoords coord;
     coord.rowNum = std::max(0.0, std::min(double(searchGrid.rowCount - 1), event.localPos().y() / rectHeight));
     coord.colNum = std::max(0.0, std::min(double(searchGrid.colCount - 1), event.localPos().x() / rectWidth));
