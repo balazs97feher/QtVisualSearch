@@ -27,7 +27,7 @@ class MainWindow : public QWidget
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() = default;
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) override;
@@ -59,5 +59,6 @@ private slots:
     void advanceAlgorithm();
     void drawPath();
     void setStepInterval();
+    void setTiling(int index);
 };
 #endif // MAINWINDOW_H

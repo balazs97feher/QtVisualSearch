@@ -60,15 +60,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(setRowAndColCount, &QPushButton::clicked, this, &MainWindow::rowOrColCountChanged);
     connect(startSearch, &QPushButton::clicked, this, &MainWindow::startAlgorithm);
     connect(slider, &QSlider::valueChanged, this, &MainWindow::setStepInterval);
+    connect(tilingList, SIGNAL(currentIndexChanged(int)), this, SLOT(setTiling(int)));
 
     setLayout(verticalLayout.get());
 }
-
-MainWindow::~MainWindow()
-{
-
-}
-
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
@@ -154,4 +149,12 @@ void MainWindow::setStepInterval()
 {
     stepInterval = std::chrono::milliseconds(200 - slider->value());
     if(timer.isActive()) timer.start(stepInterval);
+}
+
+void MainWindow::setTiling(int index)
+{
+    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] tiling changed to " << index << Qt::endl;
+
+    verticalLayout->removeWidget(canvas);
+    delete canvas;
 }
