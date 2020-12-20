@@ -22,9 +22,6 @@ void Canvas::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
 
-//    boundingWidth = float(size().width())/searchGrid.colCount;
-//    boundingHeight = float(size().height())/searchGrid.rowCount;
-
     QPainter painter(this);
     QPen pen;
     pen.setWidth(2);
@@ -49,8 +46,13 @@ void Canvas::resizeEvent(QResizeEvent *event)
 {
     switch (searchGrid.tiling) {
         case SearchGrid::Tiling::Rectangle:
-            boundingWidth = float(size().width())/searchGrid.colCount;
-            boundingHeight = float(size().height())/searchGrid.rowCount;
+            boundingWidth = float(size().width()) / searchGrid.colCount;
+            boundingHeight = float(size().height()) / searchGrid.rowCount;
+            break;
+        case SearchGrid::Tiling::Hexagon:
+            boundingWidth = searchGrid.rowCount == 1 ? float(size().width()) / searchGrid.colCount
+                                                     : float(2 * size().width()) / (2 * searchGrid.colCount + 1);
+            boundingHeight = float(4 * size().height()) / (3 * searchGrid.rowCount + 1);
             break;
     }
 
