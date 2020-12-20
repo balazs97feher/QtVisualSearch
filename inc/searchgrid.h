@@ -32,7 +32,7 @@ public:
     void resetMap();
 
 private:
-    const Tiling shape;
+    const Tiling tiling;
     QVector<QVector<std::shared_ptr<Tile>>> tiles;
     uint rowCount, colCount;
 

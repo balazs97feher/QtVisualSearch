@@ -28,6 +28,7 @@ protected:
 private:
     QSize canvasSize;
     SearchGrid &searchGrid;
+    float boundingWidth, boundingHeight;
     bool dragAndDrawWalls;
     QHash<Tile::Type, QColor> colors;
 

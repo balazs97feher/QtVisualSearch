@@ -22,8 +22,8 @@ void Canvas::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event)
 
-    float rectWidth = float(canvasSize.width())/searchGrid.colCount;
-    float rectHeight = float(canvasSize.height())/searchGrid.rowCount;
+//    boundingWidth = float(size().width())/searchGrid.colCount;
+//    boundingHeight = float(size().height())/searchGrid.rowCount;
 
     QPainter painter(this);
     QPen pen;
@@ -34,7 +34,7 @@ void Canvas::paintEvent(QPaintEvent *event)
     for(uint i = 0; i < searchGrid.rowCount; i++)
     {
         for(uint j = 0; j < searchGrid.colCount; j++){
-            QRectF rect(j*rectWidth, i*rectHeight, rectWidth, rectHeight);
+            QRectF rect(j*boundingWidth, i*boundingHeight, boundingWidth, boundingHeight);
             painter.setBrush(colors[searchGrid.tiles[i][j]->type]);
             painter.drawRect(rect);
         }
@@ -47,9 +47,14 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 void Canvas::resizeEvent(QResizeEvent *event)
 {
-    canvasSize = event->size();
+    switch (searchGrid.tiling) {
+        case SearchGrid::Tiling::Rectangle:
+            boundingWidth = float(size().width())/searchGrid.colCount;
+            boundingHeight = float(size().height())/searchGrid.rowCount;
+            break;
+    }
 
-    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] resize " << canvasSize.width() << '/' << canvasSize.height() << Qt::endl;
+    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] resize " << size().width() << '/' << size().height() << Qt::endl;
 }
 
 
@@ -91,12 +96,9 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 
 Canvas::TileCoords Canvas::getCoord(const QMouseEvent &event) const
 {
-    float rectWidth = float(canvasSize.width())/searchGrid.colCount;
-    float rectHeight = float(canvasSize.height())/searchGrid.rowCount;
-
     TileCoords coord;
-    coord.rowNum = std::max(0.0, std::min(double(searchGrid.rowCount - 1), event.localPos().y() / rectHeight));
-    coord.colNum = std::max(0.0, std::min(double(searchGrid.colCount - 1), event.localPos().x() / rectWidth));
+    coord.rowNum = std::max(0.0, std::min(double(searchGrid.rowCount - 1), event.localPos().y() / boundingHeight));
+    coord.colNum = std::max(0.0, std::min(double(searchGrid.colCount - 1), event.localPos().x() / boundingWidth));
 
     return coord;
 }

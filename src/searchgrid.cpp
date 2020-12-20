@@ -3,7 +3,7 @@
 #include "hexagon.h"
 
 SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Tiling shape) :
-    shape(shape), rowCount(rowCount), colCount(colCount), startTile(nullptr), destTile(nullptr)
+    tiling(shape), rowCount(rowCount), colCount(colCount), startTile(nullptr), destTile(nullptr)
 {
     resizeGrid();
 }
@@ -69,7 +69,7 @@ void SearchGrid::resizeGrid()
     {
         row.reserve(colCount);
         for(uint i = 0; i < colCount; i++){
-            switch (shape) {
+            switch (tiling) {
                 case Tiling::Rectangle:
                     row.append(std::make_shared<Rectangle>());
                     break;
