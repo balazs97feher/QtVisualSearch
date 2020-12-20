@@ -17,6 +17,7 @@ class Canvas : public QWidget
 
 public:
     explicit Canvas(SearchGrid &searchGrid);
+    void resize();
 
 protected:
     virtual void paintEvent(QPaintEvent *event) override;

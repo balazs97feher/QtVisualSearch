@@ -44,6 +44,15 @@ void Canvas::paintEvent(QPaintEvent *event)
 
 void Canvas::resizeEvent(QResizeEvent *event)
 {
+    Q_UNUSED(event)
+
+    resize();
+
+    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] resize " << size().width() << '/' << size().height() << Qt::endl;
+}
+
+void Canvas::resize()
+{
     switch (searchGrid.tiling) {
         case SearchGrid::Tiling::Rectangle:
             boundingWidth = float(size().width()) / searchGrid.colCount;
@@ -55,10 +64,7 @@ void Canvas::resizeEvent(QResizeEvent *event)
             boundingHeight = float(4 * size().height()) / (3 * searchGrid.rowCount + 1);
             break;
     }
-
-    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] resize " << size().width() << '/' << size().height() << Qt::endl;
 }
-
 
 void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
@@ -96,16 +102,6 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
     if(DEBUG_MSGS_ON) qDebug() << "[Canvas] double click " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
 
-Canvas::TileCoords Canvas::getCoord(const QMouseEvent &event) const
-{
-    TileCoords coord;
-    coord.rowNum = std::max(0.0, std::min(double(searchGrid.rowCount - 1), event.localPos().y() / boundingHeight));
-    coord.colNum = std::max(0.0, std::min(double(searchGrid.colCount - 1), event.localPos().x() / boundingWidth));
-
-    return coord;
-}
-
-
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
     if(DEBUG_MSGS_ON) qDebug() << "[Canvas] mouse move " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
@@ -120,4 +116,13 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
     }
 
     update();
+}
+
+Canvas::TileCoords Canvas::getCoord(const QMouseEvent &event) const
+{
+    TileCoords coord;
+    coord.rowNum = std::max(0.0, std::min(double(searchGrid.rowCount - 1), event.localPos().y() / boundingHeight));
+    coord.colNum = std::max(0.0, std::min(double(searchGrid.colCount - 1), event.localPos().x() / boundingWidth));
+
+    return coord;
 }
