@@ -1,23 +1,11 @@
 #include "searchgrid.h"
 #include "rectangle.h"
+#include "hexagon.h"
 
 SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Tiling shape) :
     shape(shape), rowCount(rowCount), colCount(colCount), startTile(nullptr), destTile(nullptr)
 {
-    tiles.resize(rowCount);
-    for(auto &row : tiles)
-    {
-        row.reserve(colCount);
-        for(uint i = 0; i < colCount; i++){
-            switch (shape) {
-                case Tiling::Rectangle:
-                    row.append(std::make_shared<Rectangle>());
-                    break;
-                default:
-                    if(DEBUG_MSGS_ON) qDebug() << "[SearchGrid] this shape is not yet implemented." << Qt::endl;
-            }
-        }
-    }
+    resizeGrid();
 }
 
 void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
@@ -28,21 +16,7 @@ void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
     this->rowCount = rowCount;
     this->colCount = colCount;
 
-    tiles.clear();
-    tiles.resize(rowCount);
-    for(auto &row : tiles)
-    {
-        row.reserve(colCount);
-        for(uint i = 0; i < colCount; i++){
-            switch (shape) {
-                case Tiling::Rectangle:
-                    row.append(std::make_shared<Rectangle>());
-                    break;
-                default:
-                    if(DEBUG_MSGS_ON) qDebug() << "[SearchGrid] this shape is not yet implemented." << Qt::endl;
-            }
-        }
-    }
+    resizeGrid();
 }
 
 void SearchGrid::setStart(const SearchGrid::TileCoords &coord)
@@ -84,4 +58,27 @@ void SearchGrid::resetMap()
     for(auto &row : tiles)
         for(auto &tile : row)
             if(tile->type == TileType::Visited || tile->type == TileType::Path) tile->type = TileType::Empty;
+}
+
+void SearchGrid::resizeGrid()
+{
+    tiles.clear();
+
+    tiles.resize(rowCount);
+    for(auto &row : tiles)
+    {
+        row.reserve(colCount);
+        for(uint i = 0; i < colCount; i++){
+            switch (shape) {
+                case Tiling::Rectangle:
+                    row.append(std::make_shared<Rectangle>());
+                    break;
+                case Tiling::Hexagon:
+                    row.append(std::make_shared<Hexagon>());
+                    break;
+                default:
+                    if(DEBUG_MSGS_ON) qDebug() << "[SearchGrid] this shape is not yet implemented." << Qt::endl;
+            }
+        }
+    }
 }

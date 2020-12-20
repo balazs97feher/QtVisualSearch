@@ -38,6 +38,8 @@ private:
 
     std::shared_ptr<Tile> startTile, destTile;
     TileCoords startCoords, destCoords;
+
+    void resizeGrid();
 };
 
 #endif // SEARCHGRID_H
