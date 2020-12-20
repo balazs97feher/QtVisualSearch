@@ -8,6 +8,9 @@ class Rectangle final : public Tile
 {
 public:
 
+    Rectangle() = default;
+    ~Rectangle() = default;
+
     virtual Coordinates getNeighborCoords(Coordinates coords, const Direction &direction) override
     {
         switch (direction) {
