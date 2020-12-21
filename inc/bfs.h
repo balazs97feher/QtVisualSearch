@@ -13,7 +13,7 @@ public:
     using TileCoords = Tile::Coordinates;
     using TileType = Tile::Type;
 
-    BFS(SearchGrid &grid);
+    BFS(std::shared_ptr<SearchGrid> grid);
 
     virtual bool initialize() override;
     virtual bool advance() override;

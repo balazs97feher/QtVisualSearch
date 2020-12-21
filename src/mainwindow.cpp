@@ -7,8 +7,11 @@
 #include <QMessageBox>
 #include "bfs.h"
 
+using namespace std;
+
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48, SearchGrid::Tiling::Rectangle), stepInterval(100), algoFinished(false)
+    : QWidget(parent), windowSize(1600, 900), searchGrid(make_shared<SearchGrid>(27, 48, SearchGrid::Tiling::Rectangle)),
+      stepInterval(100), algoFinished(false)
 {
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
@@ -76,7 +79,7 @@ void MainWindow::rowOrColCountChanged()
 {
     auto rowCnt = rowCount->text().toUInt();
     auto colCnt = colCount->text().toUInt();
-    searchGrid.setRowAndColCount(rowCnt, colCnt);
+    searchGrid->setRowAndColCount(rowCnt, colCnt);
     canvas->resize();
 
     update();
@@ -93,7 +96,7 @@ void MainWindow::startAlgorithm()
         break;
     }
 
-    if(algoFinished) searchGrid.resetMap();
+    if(algoFinished) searchGrid->resetMap();
     update();
 
     if(algorithm->initialize())
@@ -133,7 +136,7 @@ void MainWindow::drawPath()
         auto step = path.front();
         path.pop_front();
 
-        searchGrid.at(step)->type = Tile::Type::Path;
+        searchGrid->at(step)->type = Tile::Type::Path;
         update();
     }
     else

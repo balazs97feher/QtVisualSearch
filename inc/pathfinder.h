@@ -9,14 +9,14 @@ class PathFinder
 public:
     using TileCoords = Tile::Coordinates;
 
-    PathFinder(SearchGrid &grid) : grid(grid) {};
+    PathFinder(std::shared_ptr<SearchGrid> grid) : grid(grid) {};
 
     virtual bool initialize() = 0;
     virtual bool advance() = 0;
     virtual std::list<TileCoords> getPath() = 0;
 
 protected:
-    SearchGrid &grid;
+    std::shared_ptr<SearchGrid> grid;
     QVector<Tile::Direction> directions;
     uint directionCount;
 };

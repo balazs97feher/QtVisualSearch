@@ -44,7 +44,7 @@ private:
     QComboBox *algorithmList;
     QPushButton *startSearch;
     Canvas* canvas;
-    SearchGrid searchGrid;
+    std::shared_ptr<SearchGrid> searchGrid;
     std::shared_ptr<PathFinder> algorithm;
     std::list<Tile::Coordinates> path;
     QTimer timer;

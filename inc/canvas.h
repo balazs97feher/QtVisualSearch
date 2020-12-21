@@ -16,7 +16,7 @@ class Canvas : public QWidget
     using TileCoords = Tile::Coordinates;
 
 public:
-    explicit Canvas(SearchGrid &searchGrid);
+    explicit Canvas(std::shared_ptr<SearchGrid> searchGrid);
     void resize();
 
 protected:
@@ -28,7 +28,7 @@ protected:
 
 private:
     QSize canvasSize;
-    SearchGrid &searchGrid;
+    std::shared_ptr<SearchGrid> searchGrid;
     float boundingWidth, boundingHeight;
     bool dragAndDrawWalls;
     QHash<Tile::Type, QColor> colors;
