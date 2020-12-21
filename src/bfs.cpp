@@ -35,7 +35,7 @@ bool BFS::advance()
 
     if(tilesToCheck.empty() && dirIndex == directionCount) return false;
 
-    std::shared_ptr<Tile> neighbor;
+    shared_ptr<Tile> neighbor;
     TileCoords neighborCoords;
 
     while (!neighbor || (neighbor->type != TileType::Empty && neighbor->type != TileType::Destination))

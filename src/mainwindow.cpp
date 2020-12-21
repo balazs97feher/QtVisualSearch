@@ -159,6 +159,24 @@ void MainWindow::setTiling(int index)
 {
     if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] tiling changed to " << index << Qt::endl;
 
+    searchGrid.reset();
     verticalLayout->removeWidget(canvas);
     delete canvas;
+
+    auto rowCnt = rowCount->text().toUInt();
+    auto colCnt = colCount->text().toUInt();
+
+    switch(index)
+    {
+        case 0:
+            searchGrid = make_unique<SearchGrid>(rowCnt, colCnt, SearchGrid::Tiling::Rectangle);
+            break;
+        case 1:
+            searchGrid = make_unique<SearchGrid>(rowCnt, colCnt, SearchGrid::Tiling::Hexagon);
+            break;
+    }
+    canvas = new Canvas(searchGrid);
+
+    verticalLayout->addWidget(canvas);
+    update();
 }
