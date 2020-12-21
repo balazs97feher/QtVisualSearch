@@ -33,9 +33,12 @@ private:
     bool dragAndDrawWalls;
     QHash<Tile::Type, QColor> colors;
 
-    TileCoords getCoord(const QMouseEvent& event) const;
     void paintRectangles(QPainter& painter);
     void paintHexagons(QPainter &painter);
+    TileCoords getCoord(const QMouseEvent& event) const;
+    TileCoords getRectangleCoord(const QPointF &point) const;
+    TileCoords getHexagonCoord(const QPointF &point) const;
+
 };
 
 #endif // CANVAS_H

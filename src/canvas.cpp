@@ -160,9 +160,79 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
 
 Canvas::TileCoords Canvas::getCoord(const QMouseEvent &event) const
 {
+    switch(searchGrid->tiling)
+    {
+        case SearchGrid::Tiling::Rectangle:
+            return getRectangleCoord(event.localPos());
+        case SearchGrid::Tiling::Hexagon:
+            return getHexagonCoord(event.localPos());
+    }
+}
+
+Canvas::TileCoords Canvas::getRectangleCoord(const QPointF &point) const
+{
     TileCoords coord;
-    coord.rowNum = std::max(0.0, std::min(double(searchGrid->rowCount - 1), event.localPos().y() / boundingHeight));
-    coord.colNum = std::max(0.0, std::min(double(searchGrid->colCount - 1), event.localPos().x() / boundingWidth));
+    coord.rowNum = std::max(0.0, std::min(double(searchGrid->rowCount - 1), point.y() / boundingHeight));
+    coord.colNum = std::max(0.0, std::min(double(searchGrid->colCount - 1), point.x() / boundingWidth));
+
+    return coord;
+}
+
+Canvas::TileCoords Canvas::getHexagonCoord(const QPointF &point) const
+{
+    // TODO: weird behavior at the edges -> maybe change uint row/colNum to int and hangle in SearchGrid::at
+
+    int estimatedRowNum = std::max(0.0, std::min(double(searchGrid->rowCount - 1), point.y() / (0.75 * boundingHeight)));
+
+    QPointF offsetPoint = point;
+    if(estimatedRowNum % 2 == 1) offsetPoint.setX(point.x() - boundingWidth / 2);
+
+    int estimatedColNum = std::max(0.0, std::min(double(searchGrid->colCount - 1), offsetPoint.x() / boundingWidth));
+
+    // transform point coordinates into the bounding rectangle's local coordinates
+    offsetPoint.setX(offsetPoint.x() - estimatedColNum * boundingWidth);
+    offsetPoint.setY(offsetPoint.y() - estimatedRowNum * 0.75 * boundingHeight);
+
+//    if(DEBUG_MSGS_ON) qDebug() << "[Coord] row " << estimatedRowNum << " col " << estimatedColNum << Qt::endl;
+    if(DEBUG_MSGS_ON) qDebug() << "[Coord] y " << offsetPoint.y() << " x " << offsetPoint.x() << Qt::endl;
+
+    if(offsetPoint.y() < 0.25 * boundingHeight)
+    {
+        // check if point is above the hexagon's top triangle
+        auto m = (0.25 * boundingHeight) / (0.5 * boundingWidth);
+        if(offsetPoint.x() < boundingWidth / 2)
+        {
+            if(DEBUG_MSGS_ON) qDebug() << "[Coord] 1" << Qt::endl;
+            if(offsetPoint.y() < (-m * offsetPoint.x() + 0.25 * boundingHeight))
+            {
+                if(DEBUG_MSGS_ON) qDebug() << "[Coord] 2" << Qt::endl;
+                if(estimatedRowNum % 2 == 0)
+                {
+                    if(DEBUG_MSGS_ON) qDebug() << "[Coord] 3" << Qt::endl;
+                    estimatedColNum = std::max(0, std::min(int(searchGrid->colCount - 1), estimatedColNum - 1));
+                }
+                estimatedRowNum = std::max(0, std::min(int(searchGrid->rowCount - 1), estimatedRowNum - 1));
+            }
+        }
+        else
+        {
+            if(DEBUG_MSGS_ON) qDebug() << "[Coord] 4" << Qt::endl;
+            if(offsetPoint.y() < (m * offsetPoint.x() - 0.25 * boundingHeight))
+            {
+                if(DEBUG_MSGS_ON) qDebug() << "[Coord] 5" << Qt::endl;
+                if(estimatedRowNum % 2 == 1)
+                {
+                    if(DEBUG_MSGS_ON) qDebug() << "[Coord] 6" << Qt::endl;
+                    estimatedColNum = std::max(0, std::min(int(searchGrid->colCount - 1), estimatedColNum + 1));
+                }
+                estimatedRowNum = std::max(0, std::min(int(searchGrid->rowCount - 1), estimatedRowNum - 1));
+            }
+        }
+    }
+
+    TileCoords coord;
+    coord.rowNum = estimatedRowNum;
+    coord.colNum = estimatedColNum;
 
     return coord;
 }
