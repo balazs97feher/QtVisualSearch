@@ -1,62 +1,84 @@
 #include "searchgrid.h"
+#include "rectangle.h"
+#include "hexagon.h"
 
-SearchGrid::SearchGrid(uint rowCount, uint colCount) :
-    rowCount(rowCount), colCount(colCount), startField(nullptr), destField(nullptr)
+SearchGrid::SearchGrid(const uint rowCount, const uint colCount, const Tiling shape) :
+    tiling(shape), rowCount(rowCount), colCount(colCount), startTile(nullptr), destTile(nullptr)
 {
-    fields.resize(rowCount);
-    for(auto &row : fields) row.resize(colCount);
+    resizeGrid();
 }
 
 void SearchGrid::setRowAndColCount(uint rowCount, uint colCount)
 {
-    startField = nullptr;
-    destField = nullptr;
+    startTile.reset();
+    destTile.reset();
 
     this->rowCount = rowCount;
     this->colCount = colCount;
 
-    fields.clear();
-    fields.resize(rowCount);
-    for(auto &row : fields) row.resize(colCount);
+    resizeGrid();
 }
 
-void SearchGrid::setStart(const SearchGrid::FieldCoords &coord)
+void SearchGrid::setStart(const SearchGrid::TileCoords &coord)
 {
-    startField = at(coord);
-    at(coord)->type = FieldType::Start;
+    startTile = at(coord);
+    startTile->type = TileType::Start;
     startCoords = coord;
 }
 
 void SearchGrid::clearStart()
 {
-    startField->type = FieldType::Empty;
-    startField = nullptr;
+    startTile->type = TileType::Empty;
+    startTile.reset();
 }
 
-void SearchGrid::setDest(const SearchGrid::FieldCoords &coord)
+void SearchGrid::setDest(const SearchGrid::TileCoords &coord)
 {
-    destField = at(coord);
-    at(coord)->type = FieldType::Destination;
+    destTile = at(coord);
+    destTile->type = TileType::Destination;
     destCoords = coord;
 }
 
 void SearchGrid::clearDest()
 {
-    destField->type = FieldType::Empty;
-    destField = nullptr;
+    destTile->type = TileType::Empty;
+    destTile.reset();
 }
 
-Field* SearchGrid::at(const SearchGrid::FieldCoords &coord)
+std::shared_ptr<Tile> SearchGrid::at(const SearchGrid::TileCoords &coord)
 {
-    if(coord.rowNum >= 0 && coord.colNum >= 0 && coord.colNum < colCount && coord.rowNum < rowCount)
-        return &fields[coord.rowNum][coord.colNum];
+    if(coord.colNum < colCount && coord.rowNum < rowCount)
+        return tiles[coord.rowNum][coord.colNum];
 
     return nullptr;
 }
 
 void SearchGrid::resetMap()
 {
-    for(auto &row : fields)
-        for(auto &field : row)
-            if(field.type == FieldType::Visited || field.type == FieldType::Path) field.type = FieldType::Empty;
+    for(auto &row : tiles)
+        for(auto &tile : row)
+            if(tile->type == TileType::Visited || tile->type == TileType::Path) tile->type = TileType::Empty;
+}
+
+void SearchGrid::resizeGrid()
+{
+    tiles.clear();
+
+    tiles.resize(rowCount);
+    for(auto &row : tiles)
+    {
+        row.reserve(colCount);
+        for(uint i = 0; i < colCount; i++){
+            switch (tiling) {
+                case Tiling::Rectangle:
+                    row.append(std::make_shared<Rectangle>());
+                    break;
+                case Tiling::Hexagon:
+                    row.append(std::make_shared<Hexagon>());
+                    break;
+                default:
+                    if(DEBUG_MSGS_ON) qDebug() << "[SearchGrid] this shape is not yet implemented." << Qt::endl;
+            }
+        }
+    }
 }

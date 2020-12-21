@@ -27,7 +27,7 @@ class MainWindow : public QWidget
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow() = default;
 
 protected:
     virtual void resizeEvent(QResizeEvent *event) override;
@@ -36,6 +36,7 @@ private:
     QSize windowSize;
     std::unique_ptr<QVBoxLayout> verticalLayout;
     QHBoxLayout *controlArea;
+    QComboBox *tilingList;
     QLineEdit *colCount;
     QLineEdit *rowCount;
     std::unique_ptr<QIntValidator> intValidator;
@@ -43,9 +44,9 @@ private:
     QComboBox *algorithmList;
     QPushButton *startSearch;
     Canvas* canvas;
-    SearchGrid searchGrid;
+    std::shared_ptr<SearchGrid> searchGrid;
     std::shared_ptr<PathFinder> algorithm;
-    std::list<Field::Coordinates> path;
+    std::list<Tile::Coordinates> path;
     QTimer timer;
     std::chrono::milliseconds stepInterval;
     QSlider *slider;
@@ -58,5 +59,6 @@ private slots:
     void advanceAlgorithm();
     void drawPath();
     void setStepInterval();
+    void setTiling(int index);
 };
 #endif // MAINWINDOW_H

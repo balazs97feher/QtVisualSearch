@@ -7,8 +7,11 @@
 #include <QMessageBox>
 #include "bfs.h"
 
+using namespace std;
+
 MainWindow::MainWindow(QWidget *parent)
-    : QWidget(parent), windowSize(1600, 900), searchGrid(27, 48), stepInterval(100), algoFinished(false)
+    : QWidget(parent), windowSize(1600, 900), searchGrid(make_shared<SearchGrid>(27, 48, SearchGrid::Tiling::Rectangle)),
+      stepInterval(100), algoFinished(false)
 {
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
@@ -17,6 +20,11 @@ MainWindow::MainWindow(QWidget *parent)
     verticalLayout->addLayout(controlArea);
     canvas = new Canvas(searchGrid);
     verticalLayout->addWidget(canvas);
+
+    tilingList = new QComboBox();
+    tilingList->setFixedSize(100, 25);
+    tilingList->addItem("Rectangle tiling");
+    tilingList->addItem("Hexagon tiling");
 
     rowCount = new QLineEdit("27");
     colCount = new QLineEdit("48");
@@ -44,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     slider->setMaximum(190);
     slider->setValue(200 - stepInterval.count());
 
+    controlArea->addWidget(tilingList);
     controlArea->addWidget(colCount);
     controlArea->addWidget(rowCount);
     controlArea->addWidget(setRowAndColCount);
@@ -54,15 +63,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(setRowAndColCount, &QPushButton::clicked, this, &MainWindow::rowOrColCountChanged);
     connect(startSearch, &QPushButton::clicked, this, &MainWindow::startAlgorithm);
     connect(slider, &QSlider::valueChanged, this, &MainWindow::setStepInterval);
+    connect(tilingList, SIGNAL(currentIndexChanged(int)), this, SLOT(setTiling(int)));
 
     setLayout(verticalLayout.get());
 }
-
-MainWindow::~MainWindow()
-{
-
-}
-
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
@@ -75,8 +79,8 @@ void MainWindow::rowOrColCountChanged()
 {
     auto rowCnt = rowCount->text().toUInt();
     auto colCnt = colCount->text().toUInt();
-    searchGrid.setRowAndColCount(rowCnt, colCnt);
-    canvas->setRowAndColSize(rowCnt, colCnt);
+    searchGrid->setRowAndColCount(rowCnt, colCnt);
+    canvas->resize();
 
     update();
 
@@ -92,7 +96,7 @@ void MainWindow::startAlgorithm()
         break;
     }
 
-    if(algoFinished) searchGrid.resetMap();
+    if(algoFinished) searchGrid->resetMap();
     update();
 
     if(algorithm->initialize())
@@ -103,7 +107,7 @@ void MainWindow::startAlgorithm()
     else
     {
         QMessageBox msgBox;
-        msgBox.setText("Please set a start and a destination field.");
+        msgBox.setText("Please set a start and a destination tile.");
         msgBox.setStandardButtons(QMessageBox::Ok);
         msgBox.setIcon(QMessageBox::Warning);
         msgBox.exec();
@@ -112,12 +116,10 @@ void MainWindow::startAlgorithm()
 
 void MainWindow::advanceAlgorithm()
 {
-    if(algorithm->advance())
-    {
-        update();
-    }
+    if(algorithm->advance()) update();
     else
     {
+        if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] algorithm finished" << Qt::endl;
         timer.stop();
         disconnect(&timer, nullptr, nullptr, nullptr);
 
@@ -134,7 +136,7 @@ void MainWindow::drawPath()
         auto step = path.front();
         path.pop_front();
 
-        searchGrid.at(step)->type = Field::Type::Path;
+        searchGrid->at(step)->type = Tile::Type::Path;
         update();
     }
     else
@@ -151,4 +153,30 @@ void MainWindow::setStepInterval()
 {
     stepInterval = std::chrono::milliseconds(200 - slider->value());
     if(timer.isActive()) timer.start(stepInterval);
+}
+
+void MainWindow::setTiling(int index)
+{
+    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] tiling changed to " << index << Qt::endl;
+
+    searchGrid.reset();
+    verticalLayout->removeWidget(canvas);
+    delete canvas;
+
+    auto rowCnt = rowCount->text().toUInt();
+    auto colCnt = colCount->text().toUInt();
+
+    switch(index)
+    {
+        case 0:
+            searchGrid = make_unique<SearchGrid>(rowCnt, colCnt, SearchGrid::Tiling::Rectangle);
+            break;
+        case 1:
+            searchGrid = make_unique<SearchGrid>(rowCnt, colCnt, SearchGrid::Tiling::Hexagon);
+            break;
+    }
+    canvas = new Canvas(searchGrid);
+
+    verticalLayout->addWidget(canvas);
+    update();
 }

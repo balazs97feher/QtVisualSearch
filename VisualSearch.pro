@@ -22,10 +22,12 @@ HEADERS += \
     inc/bfs.h \
     inc/canvas.h \
     inc/debug.h \
-    inc/field.h \
+    inc/hexagon.h \
     inc/mainwindow.h \
     inc/pathfinder.h \
-    inc/searchgrid.h
+    inc/rectangle.h \
+    inc/searchgrid.h \
+    inc/tile.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

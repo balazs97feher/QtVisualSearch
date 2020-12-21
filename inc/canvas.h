@@ -6,20 +6,18 @@
 #include <QWidget>
 #include <QSize>
 #include <QVector>
+#include <QHash>
 
 class Canvas : public QWidget
 {
     Q_OBJECT
 
-    using FieldType = Field::Type;
-    using FieldCoords = Field::Coordinates;
+    using TileType = Tile::Type;
+    using TileCoords = Tile::Coordinates;
 
 public:
-    explicit Canvas(SearchGrid &searchGrid);
-
-    void setRowAndColSize(uint rowCount, uint colCount);
-
-signals:
+    explicit Canvas(std::shared_ptr<SearchGrid> searchGrid);
+    void resize();
 
 protected:
     virtual void paintEvent(QPaintEvent *event) override;
@@ -30,11 +28,16 @@ protected:
 
 private:
     QSize canvasSize;
-    float rectWidth, rectHeight;
-    SearchGrid &searchGrid;
+    std::shared_ptr<SearchGrid> searchGrid;
+    float boundingWidth, boundingHeight;
     bool dragAndDrawWalls;
+    QHash<Tile::Type, QColor> colors;
 
-    FieldCoords getCoord(const QMouseEvent& event) const;
+    void paintRectangles(QPainter& painter);
+    void paintHexagons(QPainter &painter);
+    TileCoords getCoord(const QMouseEvent& event) const;
+    TileCoords getRectangleCoord(const QPointF &point) const;
+    TileCoords getHexagonCoord(const QPointF &point) const;
 
 };
 
