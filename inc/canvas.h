@@ -34,7 +34,8 @@ private:
     QHash<Tile::Type, QColor> colors;
 
     TileCoords getCoord(const QMouseEvent& event) const;
-
+    void paintRectangles(QPainter& painter);
+    void paintHexagons(QPainter &painter);
 };
 
 #endif // CANVAS_H

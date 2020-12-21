@@ -3,6 +3,7 @@
 #include <QPen>
 #include <QPainter>
 #include <QRectF>
+#include <QPolygonF>
 #include <QPaintEvent>
 #include <algorithm>
 
@@ -30,6 +31,22 @@ void Canvas::paintEvent(QPaintEvent *event)
     pen.setColor(QColor(100,100,100));
     painter.setPen(pen);
 
+    switch(searchGrid->tiling)
+    {
+        case SearchGrid::Tiling::Rectangle:
+            paintRectangles(painter);
+            break;
+        case SearchGrid::Tiling::Hexagon:
+            paintHexagons(painter);
+            break;
+    }
+
+    static int id = 0;
+    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] paint " << id++ << Qt::endl;
+}
+
+void Canvas::paintRectangles(QPainter &painter)
+{
     for(uint i = 0; i < searchGrid->rowCount; i++)
     {
         for(uint j = 0; j < searchGrid->colCount; j++){
@@ -38,11 +55,32 @@ void Canvas::paintEvent(QPaintEvent *event)
             painter.drawRect(rect);
         }
     }
-
-    static int id = 0;
-    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] paint " << id++ << Qt::endl;
 }
 
+void Canvas::paintHexagons(QPainter &painter)
+{
+    const QVector<QPointF> vertices = {
+        {boundingWidth / 2, 0},
+        {boundingWidth, boundingHeight / 4},
+        {boundingWidth, 3 * boundingHeight / 4},
+        {boundingWidth / 2, boundingHeight},
+        {0, 3 * boundingHeight / 4},
+        {0, boundingHeight / 4}
+    };
+    const QPolygonF upperLeft(vertices);
+
+    for(uint i = 0; i < searchGrid->rowCount; i++)
+    {
+        auto offsetHex = (i % 2 == 0) ? upperLeft : upperLeft.translated(boundingWidth / 2, 0);
+
+        for(uint j = 0; j < searchGrid->colCount; j++)
+        {
+            auto translated = offsetHex.translated(j * boundingWidth, i * 3 * boundingHeight / 4);
+            painter.setBrush(colors[searchGrid->tiles[i][j]->type]);
+            painter.drawConvexPolygon(translated);
+        }
+    }
+}
 
 void Canvas::resizeEvent(QResizeEvent *event)
 {
