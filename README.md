@@ -10,4 +10,4 @@ Written in C++, using Qt 5.
 - BFS
 - set the pace of the search with a slider
 
-![Shortest path on a hexagonal grid](./doc/hex_path.png)
+![Shortest path on a hexagonal grid](/doc/hex_path.png?raw=true)
