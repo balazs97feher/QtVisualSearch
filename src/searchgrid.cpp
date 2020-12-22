@@ -47,7 +47,7 @@ void SearchGrid::clearDest()
 
 std::shared_ptr<Tile> SearchGrid::at(const SearchGrid::TileCoords &coord)
 {
-    if(coord.colNum < colCount && coord.rowNum < rowCount)
+    if(coord.colNum >= 0 && coord.rowNum >= 0 && coord.colNum < colCount && coord.rowNum < rowCount)
         return tiles[coord.rowNum][coord.colNum];
 
     return nullptr;

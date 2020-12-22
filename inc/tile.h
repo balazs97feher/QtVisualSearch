@@ -32,7 +32,7 @@ public:
 
     struct Coordinates
     {
-        unsigned int rowNum, colNum;
+        int rowNum, colNum;
     };
 
     Tile() : type(Type::Empty) {};

@@ -6,6 +6,7 @@
 #include <QPolygonF>
 #include <QPaintEvent>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -110,7 +111,7 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 {
     auto clickCoord = getCoord(*event);
 
-    if(!dragAndDrawWalls)
+    if(!dragAndDrawWalls && searchGrid->at(clickCoord) != nullptr)
     {
         if(searchGrid->at(clickCoord)->type == TileType::Empty)
             searchGrid->at(clickCoord)->type = TileType::Wall;
@@ -128,16 +129,18 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
 void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 {
     auto clickCoord = getCoord(*event);
-
-    if(!searchGrid->startTile) searchGrid->setStart(clickCoord);
-    else if(!searchGrid->destTile) searchGrid->setDest(clickCoord);
-    else
+    if(searchGrid->at(clickCoord) != nullptr)
     {
-        searchGrid->clearStart();
-        searchGrid->clearDest();
-    }
+        if(!searchGrid->startTile) searchGrid->setStart(clickCoord);
+        else if(!searchGrid->destTile) searchGrid->setDest(clickCoord);
+        else
+        {
+            searchGrid->clearStart();
+            searchGrid->clearDest();
+        }
 
-    update();
+        update();
+    }
 
     if(DEBUG_MSGS_ON) qDebug() << "[Canvas] double click " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
@@ -149,13 +152,12 @@ void Canvas::mouseMoveEvent(QMouseEvent *event)
     auto cursorCoord = getCoord(*event);
 
     auto tile = searchGrid->at(cursorCoord);
-    if(tile->type == TileType::Empty)
+    if(tile != nullptr && tile->type == TileType::Empty)
     {
         tile->type = TileType::Wall;
         dragAndDrawWalls = true;
+        update();
     }
-
-    update();
 }
 
 Canvas::TileCoords Canvas::getCoord(const QMouseEvent &event) const
@@ -172,8 +174,10 @@ Canvas::TileCoords Canvas::getCoord(const QMouseEvent &event) const
 Canvas::TileCoords Canvas::getRectangleCoord(const QPointF &point) const
 {
     TileCoords coord;
-    coord.rowNum = std::max(0.0, std::min(double(searchGrid->rowCount - 1), point.y() / boundingHeight));
-    coord.colNum = std::max(0.0, std::min(double(searchGrid->colCount - 1), point.x() / boundingWidth));
+    coord.rowNum = floor(point.y() / boundingHeight);
+    coord.colNum = floor(point.x() / boundingWidth);
+
+    if(DEBUG_MSGS_ON) qDebug() << "[Coord] row " << coord.rowNum << " col " << coord.colNum << Qt::endl;
 
     return coord;
 }
@@ -181,13 +185,21 @@ Canvas::TileCoords Canvas::getRectangleCoord(const QPointF &point) const
 Canvas::TileCoords Canvas::getHexagonCoord(const QPointF &point) const
 {
     // TODO: weird behavior at the edges -> maybe change uint row/colNum to int and hangle in SearchGrid::at
+    TileCoords coord;
 
-    int estimatedRowNum = std::max(0.0, std::min(double(searchGrid->rowCount - 1), point.y() / (0.75 * boundingHeight)));
+    int estimatedRowNum = floor(point.y() / (0.75 * boundingHeight));
 
     QPointF offsetPoint = point;
     if(estimatedRowNum % 2 == 1) offsetPoint.setX(point.x() - boundingWidth / 2);
 
-    int estimatedColNum = std::max(0.0, std::min(double(searchGrid->colCount - 1), offsetPoint.x() / boundingWidth));
+    int estimatedColNum = floor(offsetPoint.x() / boundingWidth);
+
+    if(estimatedColNum < 0 || estimatedRowNum < 0)
+    {
+        coord.colNum = estimatedColNum;
+        coord.rowNum = estimatedRowNum;
+        return coord;
+    }
 
     // transform point coordinates into the bounding rectangle's local coordinates
     offsetPoint.setX(offsetPoint.x() - estimatedColNum * boundingWidth);
@@ -209,9 +221,9 @@ Canvas::TileCoords Canvas::getHexagonCoord(const QPointF &point) const
                 if(estimatedRowNum % 2 == 0)
                 {
                     if(DEBUG_MSGS_ON) qDebug() << "[Coord] 3" << Qt::endl;
-                    estimatedColNum = std::max(0, std::min(int(searchGrid->colCount - 1), estimatedColNum - 1));
+                    estimatedColNum = estimatedColNum - 1;
                 }
-                estimatedRowNum = std::max(0, std::min(int(searchGrid->rowCount - 1), estimatedRowNum - 1));
+                estimatedRowNum = estimatedRowNum - 1;
             }
         }
         else
@@ -223,14 +235,13 @@ Canvas::TileCoords Canvas::getHexagonCoord(const QPointF &point) const
                 if(estimatedRowNum % 2 == 1)
                 {
                     if(DEBUG_MSGS_ON) qDebug() << "[Coord] 6" << Qt::endl;
-                    estimatedColNum = std::max(0, std::min(int(searchGrid->colCount - 1), estimatedColNum + 1));
+                    estimatedColNum = estimatedColNum + 1;
                 }
-                estimatedRowNum = std::max(0, std::min(int(searchGrid->rowCount - 1), estimatedRowNum - 1));
+                estimatedRowNum = estimatedRowNum - 1;
             }
         }
     }
 
-    TileCoords coord;
     coord.rowNum = estimatedRowNum;
     coord.colNum = estimatedColNum;
 
