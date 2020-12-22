@@ -15,26 +15,26 @@ public:
     {
         switch (direction) {
             case Direction::NorthEast:
-                coords.rowNum--;
                 coords.colNum = (coords.rowNum % 2 == 0) ? coords.colNum : coords.colNum + 1;
+                coords.rowNum--;
                 break;
             case Direction::East:
                 coords.colNum++;
                 break;
             case Direction::SouthEast:
-                coords.rowNum++;
                 coords.colNum = (coords.rowNum % 2 == 0) ? coords.colNum : coords.colNum + 1;
+                coords.rowNum++;
                 break;
             case Direction::SouthWest:
-                coords.rowNum++;
                 coords.colNum = (coords.rowNum % 2 == 0) ? coords.colNum - 1 : coords.colNum;
+                coords.rowNum++;
                 break;
             case Direction::West:
                 coords.colNum--;
                 break;
             case Direction::NorthWest:
-                coords.rowNum--;
                 coords.colNum = (coords.rowNum % 2 == 0) ? coords.colNum - 1 : coords.colNum;
+                coords.rowNum--;
                 break;
             default:
                 if(DEBUG_MSGS_ON) qDebug() << "[Hexagon] invalid direction passed as function argument" << Qt::endl;
