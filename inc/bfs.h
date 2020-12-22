@@ -3,9 +3,10 @@
 
 #include "debug.h"
 
-#include "pathfinder.h"
-#include <list>
 #include <QVector>
+#include <list>
+
+#include "pathfinder.h"
 
 class BFS final : public PathFinder
 {

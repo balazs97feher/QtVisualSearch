@@ -2,11 +2,13 @@
 #define CANVAS_H
 
 #include "debug.h"
-#include "searchgrid.h"
+
 #include <QWidget>
 #include <QSize>
 #include <QVector>
 #include <QHash>
+
+#include "searchgrid.h"
 
 class Canvas : public QWidget
 {

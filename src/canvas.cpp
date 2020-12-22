@@ -61,22 +61,22 @@ void Canvas::paintRectangles(QPainter &painter)
 void Canvas::paintHexagons(QPainter &painter)
 {
     const QVector<QPointF> vertices = {
-        {boundingWidth / 2, 0},
-        {boundingWidth, boundingHeight / 4},
-        {boundingWidth, 3 * boundingHeight / 4},
-        {boundingWidth / 2, boundingHeight},
-        {0, 3 * boundingHeight / 4},
-        {0, boundingHeight / 4}
+        {0.5 * boundingWidth, 0},
+        {boundingWidth, 0.25 * boundingHeight},
+        {boundingWidth, 0.75 * boundingHeight},
+        {0.5 * boundingWidth, boundingHeight},
+        {0, 0.75 * boundingHeight},
+        {0, 0.25 * boundingHeight}
     };
     const QPolygonF upperLeft(vertices);
 
     for(uint i = 0; i < searchGrid->rowCount; i++)
     {
-        auto offsetHex = (i % 2 == 0) ? upperLeft : upperLeft.translated(boundingWidth / 2, 0);
+        auto offsetHex = (i % 2 == 0) ? upperLeft : upperLeft.translated(0.5 * boundingWidth, 0);
 
         for(uint j = 0; j < searchGrid->colCount; j++)
         {
-            auto translated = offsetHex.translated(j * boundingWidth, i * 3 * boundingHeight / 4);
+            auto translated = offsetHex.translated(j * boundingWidth, i * 0.75 * boundingHeight);
             painter.setBrush(colors[searchGrid->tiles[i][j]->type]);
             painter.drawConvexPolygon(translated);
         }
@@ -184,59 +184,35 @@ Canvas::TileCoords Canvas::getRectangleCoord(const QPointF &point) const
 
 Canvas::TileCoords Canvas::getHexagonCoord(const QPointF &point) const
 {
-    // TODO: weird behavior at the edges -> maybe change uint row/colNum to int and hangle in SearchGrid::at
     TileCoords coord;
 
     int estimatedRowNum = floor(point.y() / (0.75 * boundingHeight));
 
     QPointF offsetPoint = point;
-    if(estimatedRowNum % 2 == 1) offsetPoint.setX(point.x() - boundingWidth / 2);
+    if(estimatedRowNum % 2 == 1) offsetPoint.setX(point.x() - 0.5 * boundingWidth);
 
     int estimatedColNum = floor(offsetPoint.x() / boundingWidth);
-
-    if(estimatedColNum < 0 || estimatedRowNum < 0)
-    {
-        coord.colNum = estimatedColNum;
-        coord.rowNum = estimatedRowNum;
-        return coord;
-    }
 
     // transform point coordinates into the bounding rectangle's local coordinates
     offsetPoint.setX(offsetPoint.x() - estimatedColNum * boundingWidth);
     offsetPoint.setY(offsetPoint.y() - estimatedRowNum * 0.75 * boundingHeight);
-
-//    if(DEBUG_MSGS_ON) qDebug() << "[Coord] row " << estimatedRowNum << " col " << estimatedColNum << Qt::endl;
-    if(DEBUG_MSGS_ON) qDebug() << "[Coord] y " << offsetPoint.y() << " x " << offsetPoint.x() << Qt::endl;
-
     if(offsetPoint.y() < 0.25 * boundingHeight)
     {
         // check if point is above the hexagon's top triangle
         auto m = (0.25 * boundingHeight) / (0.5 * boundingWidth);
-        if(offsetPoint.x() < boundingWidth / 2)
+        if(offsetPoint.x() < 0.5 * boundingWidth)
         {
-            if(DEBUG_MSGS_ON) qDebug() << "[Coord] 1" << Qt::endl;
             if(offsetPoint.y() < (-m * offsetPoint.x() + 0.25 * boundingHeight))
             {
-                if(DEBUG_MSGS_ON) qDebug() << "[Coord] 2" << Qt::endl;
-                if(estimatedRowNum % 2 == 0)
-                {
-                    if(DEBUG_MSGS_ON) qDebug() << "[Coord] 3" << Qt::endl;
-                    estimatedColNum = estimatedColNum - 1;
-                }
+                if(estimatedRowNum % 2 == 0) estimatedColNum = estimatedColNum - 1;
                 estimatedRowNum = estimatedRowNum - 1;
             }
         }
         else
         {
-            if(DEBUG_MSGS_ON) qDebug() << "[Coord] 4" << Qt::endl;
             if(offsetPoint.y() < (m * offsetPoint.x() - 0.25 * boundingHeight))
             {
-                if(DEBUG_MSGS_ON) qDebug() << "[Coord] 5" << Qt::endl;
-                if(estimatedRowNum % 2 == 1)
-                {
-                    if(DEBUG_MSGS_ON) qDebug() << "[Coord] 6" << Qt::endl;
-                    estimatedColNum = estimatedColNum + 1;
-                }
+                if(estimatedRowNum % 2 == 1) estimatedColNum = estimatedColNum + 1;
                 estimatedRowNum = estimatedRowNum - 1;
             }
         }
@@ -244,6 +220,5 @@ Canvas::TileCoords Canvas::getHexagonCoord(const QPointF &point) const
 
     coord.rowNum = estimatedRowNum;
     coord.colNum = estimatedColNum;
-
     return coord;
 }

@@ -32,6 +32,7 @@ public:
 
     struct Coordinates
     {
+        Coordinates() : rowNum(-1), colNum(-1) {}
         int rowNum, colNum;
     };
 

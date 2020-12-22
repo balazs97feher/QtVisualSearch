@@ -92,8 +92,8 @@ void MainWindow::startAlgorithm()
 {
     switch (algorithmList->currentIndex()) {
         case 0:
-        algorithm = std::make_shared<BFS>(searchGrid);
-        break;
+            algorithm = std::make_shared<BFS>(searchGrid);
+            break;
     }
 
     if(algoFinished) searchGrid->resetMap();
@@ -124,8 +124,11 @@ void MainWindow::advanceAlgorithm()
         disconnect(&timer, nullptr, nullptr, nullptr);
 
         path = algorithm->getPath();
-        connect(&timer, &QTimer::timeout, this, &MainWindow::drawPath);
-        timer.start(stepInterval);
+        if(!path.empty())
+        {
+            connect(&timer, &QTimer::timeout, this, &MainWindow::drawPath);
+            timer.start(stepInterval);
+        } else algoFinished = true;
     }
 }
 

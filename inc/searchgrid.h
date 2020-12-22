@@ -1,9 +1,10 @@
 #ifndef SEARCHGRID_H
 #define SEARCHGRID_H
 
-#include "tile.h"
 #include <QVector>
 #include <memory>
+
+#include "tile.h"
 
 class Canvas;
 class BFS;

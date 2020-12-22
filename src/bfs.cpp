@@ -41,23 +41,17 @@ bool BFS::advance()
 
     while (!neighbor || (neighbor->type != TileType::Empty && neighbor->type != TileType::Destination))
     {
-        if(DEBUG_MSGS_ON) qDebug() << "[BFS] OUTER " << dirIndex << Qt::endl;
         if(dirIndex == directionCount)
         {
             if(tilesToCheck.empty()) return false;
-            if(DEBUG_MSGS_ON) qDebug() << "[BFS] poppin " << dirIndex << Qt::endl;
             currentTile = tilesToCheck.front();
             tilesToCheck.pop_front();
             dirIndex = 0;
         }
 
-        while((!neighbor || (neighbor->type != TileType::Empty && neighbor->type != TileType::Destination)) && dirIndex < directionCount)
-        {
-            if(DEBUG_MSGS_ON) qDebug() << "[BFS] dir iter " << dirIndex << Qt::endl;
-            neighborCoords = grid->tiles[0][0]->getNeighborCoords(currentTile, PathFinder::directions[dirIndex]);
-            neighbor = grid->at(neighborCoords);
-            dirIndex++;
-        }
+        neighborCoords = grid->tiles[0][0]->getNeighborCoords(currentTile, PathFinder::directions[dirIndex]);
+        neighbor = grid->at(neighborCoords);
+        dirIndex++;
     }
 
     previousTile[neighborCoords.rowNum][neighborCoords.colNum] = currentTile;
@@ -68,7 +62,6 @@ bool BFS::advance()
         return false;
     }
     neighbor->type = TileType::Visited;
-    if(DEBUG_MSGS_ON) qDebug() << "[BFS] push back: " << neighborCoords.rowNum << ' ' << neighborCoords.colNum << Qt::endl;
     tilesToCheck.push_back(neighborCoords);
 
     static uint visitId = 0;
@@ -79,9 +72,10 @@ bool BFS::advance()
 
 list<BFS::TileCoords> BFS::getPath()
 {
+    if(previousTile[grid->destCoords.rowNum][grid->destCoords.colNum].rowNum == -1) return {};
+
     list<TileCoords> path;
     auto step = previousTile[grid->destCoords.rowNum][grid->destCoords.colNum];
-
     while(grid->at(step)->type != TileType::Start)
     {
         path.push_front(step);
