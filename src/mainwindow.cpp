@@ -12,7 +12,7 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent)
     : QWidget(parent), windowSize(1600, 900), searchGrid(make_shared<SearchGrid>(27, 48, SearchGrid::Tiling::Rectangle)),
       stepInterval(100), algoFinished(false)
-{
+{ 
     resize(windowSize);
     verticalLayout = std::make_unique<QVBoxLayout>();
     controlArea = new QHBoxLayout();
@@ -66,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(tilingList, SIGNAL(currentIndexChanged(int)), this, SLOT(setTiling(int)));
 
     setLayout(verticalLayout.get());
+
+    setWindowIcon(QIcon(":/vsicon.png"));
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
