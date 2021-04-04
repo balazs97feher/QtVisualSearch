@@ -1,7 +1,8 @@
 #ifndef HEXAGON_H
 #define HEXAGON_H
 
-#include "debug.h"
+#include <QDebug>
+
 #include "tile.h"
 
 class Hexagon final : public Tile
@@ -37,7 +38,7 @@ public:
                 coords.rowNum--;
                 break;
             default:
-                if(DEBUG_MSGS_ON) qDebug() << "[Hexagon] invalid direction passed as function argument" << Qt::endl;
+                qFatal("invalid direction passed as function argument");
                 break;
         }
 

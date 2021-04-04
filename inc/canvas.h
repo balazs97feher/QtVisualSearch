@@ -1,8 +1,6 @@
 #ifndef CANVAS_H
 #define CANVAS_H
 
-#include "debug.h"
-
 #include <QWidget>
 #include <QSize>
 #include <QVector>

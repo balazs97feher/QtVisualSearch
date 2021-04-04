@@ -73,8 +73,6 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     windowSize = event->size();
-
-    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] resize: " << windowSize.width() << '/' << windowSize.height() << Qt::endl;
 }
 
 void MainWindow::rowOrColCountChanged()
@@ -85,9 +83,6 @@ void MainWindow::rowOrColCountChanged()
     canvas->resize();
 
     update();
-
-    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] colCount : " << colCount->text()
-                               << " rowCount: " << rowCount->text() << Qt::endl;
 }
 
 void MainWindow::startAlgorithm()
@@ -121,7 +116,6 @@ void MainWindow::advanceAlgorithm()
     if(algorithm->advance()) update();
     else
     {
-        if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] algorithm finished" << Qt::endl;
         timer.stop();
         disconnect(&timer, nullptr, nullptr, nullptr);
 
@@ -162,8 +156,6 @@ void MainWindow::setStepInterval()
 
 void MainWindow::setTiling(int index)
 {
-    if(DEBUG_MSGS_ON) qDebug() << "[MainWindow] tiling changed to " << index << Qt::endl;
-
     searchGrid.reset();
     verticalLayout->removeWidget(canvas);
     delete canvas;

@@ -1,7 +1,8 @@
 #ifndef RECTANGLE_H
 #define RECTANGLE_H
 
-#include "debug.h"
+#include <QDebug>
+
 #include "tile.h"
 
 class Rectangle final : public Tile
@@ -27,7 +28,7 @@ public:
                 coords.colNum--;
                 break;
             default:
-                if(DEBUG_MSGS_ON) qDebug() << "[Rectangle] invalid direction passed as function argument" << Qt::endl;
+                qFatal("invalid direction passed as function argument");
                 break;
         }
 

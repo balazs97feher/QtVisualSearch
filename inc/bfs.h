@@ -1,8 +1,6 @@
 #ifndef BFS_H
 #define BFS_H
 
-#include "debug.h"
-
 #include <QVector>
 #include <list>
 

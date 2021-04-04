@@ -21,7 +21,6 @@ SOURCES += \
 HEADERS += \
     inc/bfs.h \
     inc/canvas.h \
-    inc/debug.h \
     inc/hexagon.h \
     inc/mainwindow.h \
     inc/pathfinder.h \

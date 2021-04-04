@@ -41,9 +41,6 @@ void Canvas::paintEvent(QPaintEvent *event)
             paintHexagons(painter);
             break;
     }
-
-    static int id = 0;
-    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] paint " << id++ << Qt::endl;
 }
 
 void Canvas::paintRectangles(QPainter &painter)
@@ -88,8 +85,6 @@ void Canvas::resizeEvent(QResizeEvent *event)
     Q_UNUSED(event)
 
     resize();
-
-    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] resize " << size().width() << '/' << size().height() << Qt::endl;
 }
 
 void Canvas::resize()
@@ -121,8 +116,6 @@ void Canvas::mouseReleaseEvent(QMouseEvent *event)
         update();
     }
     else dragAndDrawWalls = false;
-
-    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] mouse release " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
 
 
@@ -141,14 +134,10 @@ void Canvas::mouseDoubleClickEvent(QMouseEvent *event)
 
         update();
     }
-
-    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] double click " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
 }
 
 void Canvas::mouseMoveEvent(QMouseEvent *event)
 {
-    if(DEBUG_MSGS_ON) qDebug() << "[Canvas] mouse move " << event->localPos().x() << '/' << event->localPos().y() << Qt::endl;
-
     auto cursorCoord = getCoord(*event);
 
     auto tile = searchGrid->at(cursorCoord);
@@ -176,8 +165,6 @@ Canvas::TileCoords Canvas::getRectangleCoord(const QPointF &point) const
     TileCoords coord;
     coord.rowNum = floor(point.y() / boundingHeight);
     coord.colNum = floor(point.x() / boundingWidth);
-
-    if(DEBUG_MSGS_ON) qDebug() << "[Coord] row " << coord.rowNum << " col " << coord.colNum << Qt::endl;
 
     return coord;
 }

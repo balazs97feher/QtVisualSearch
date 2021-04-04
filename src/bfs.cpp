@@ -17,23 +17,17 @@ bool BFS::initialize()
 {
     if(grid->startTile && grid->destTile)
     {
-        qDebug() << "[BFS] initialzed" << Qt::endl;
-
         tilesToCheck.push_back(grid->startCoords);
         return true;
     }
     else
     {
-        qDebug() << "[BFS] failed to initilaze" << Qt::endl;
         return false;
     }
 }
 
 bool BFS::advance()
 {
-    static uint callId = 0;
-    if(DEBUG_MSGS_ON) qDebug() << "[BFS] advance called " << callId++ << Qt::endl;
-
     if(tilesToCheck.empty() && dirIndex == directionCount) return false;
 
     shared_ptr<Tile> neighbor;
@@ -58,14 +52,10 @@ bool BFS::advance()
 
     if(neighbor->type == TileType::Destination)
     {
-        if(DEBUG_MSGS_ON) qDebug() << "[BFS] reached destination" << Qt::endl;
         return false;
     }
     neighbor->type = TileType::Visited;
     tilesToCheck.push_back(neighborCoords);
-
-    static uint visitId = 0;
-    if(DEBUG_MSGS_ON) qDebug() << "[BFS] visited new neighbor " << visitId++ << Qt::endl;
 
     return true;
 }

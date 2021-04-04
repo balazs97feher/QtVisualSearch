@@ -77,7 +77,7 @@ void SearchGrid::resizeGrid()
                     row.append(std::make_shared<Hexagon>());
                     break;
                 default:
-                    if(DEBUG_MSGS_ON) qDebug() << "[SearchGrid] this shape is not yet implemented." << Qt::endl;
+                    qFatal("invalid direction passed as function argument");
             }
         }
     }
